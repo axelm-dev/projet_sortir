@@ -45,6 +45,14 @@ class Meeting
     #[ORM\JoinColumn(nullable: false)]
     private ?StateMeeting $state = null;
 
+    #[ORM\ManyToOne(inversedBy: 'meetingsPlace')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Place $place = null;
+
+    #[ORM\ManyToOne(inversedBy: 'meetings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Campus $campus = null;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -171,6 +179,30 @@ class Meeting
     public function setState(?StateMeeting $state): static
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    public function getPlace(): ?Place
+    {
+        return $this->place;
+    }
+
+    public function setPlace(?Place $place): static
+    {
+        $this->place = $place;
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): static
+    {
+        $this->campus = $campus;
 
         return $this;
     }
