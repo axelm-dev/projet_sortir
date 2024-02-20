@@ -14,6 +14,7 @@ class MeetingType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('campus')
             ->add('duration')
             ->add('date', DateType::class, [
                 'label' => 'Date',
