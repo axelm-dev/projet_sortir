@@ -29,17 +29,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $firstname = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $lastname = null;
-
     #[ORM\Column(length: 50)]
     private ?string $login = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $phone = null;
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Profile $profile = null;
 
     public function getId(): ?int
     {
@@ -111,30 +105,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname): static
-    {
-        $this->firstname = $firstname;
-
-        return $this;
-    }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(string $lastname): static
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
     public function getLogin(): ?string
     {
         return $this->login;
@@ -147,15 +117,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPhone(): ?string
+    public function getProfile(): ?Profile
     {
-        return $this->phone;
+        return $this->profile;
     }
 
-    public function setPhone(string $phone): static
+    public function setProfile(?Profile $profile): static
     {
-        $this->phone = $phone;
-
+        $this->profile = $profile;
         return $this;
     }
 }
