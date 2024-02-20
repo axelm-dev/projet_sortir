@@ -7,6 +7,7 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <a class="nav-link active" aria-current="page" href="{{ path("app_home") }}">Accueil</a>
+                <a href="{{ path("app_meeting_index") }}" class="nav-link">Liste des sorties</a>
                 {% if app.user %}
                     <a class="nav-link" href="{{ url("app_logout") }}">Déconnexion</a>
                 {% else %}
