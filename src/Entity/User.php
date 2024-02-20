@@ -35,6 +35,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Profile $profile = null;
 
+    #[ORM\Column]
+    private ?bool $actif = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -55,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * A visual identifier that represents this user.
      *
-     * @see UserInterface
+     * @see UserInterface-
      */
     public function getUserIdentifier(): string
     {
@@ -125,6 +128,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setProfile(?Profile $profile): static
     {
         $this->profile = $profile;
+        return $this;
+    }
+
+    public function isActif(): ?bool
+    {
+        return $this->actif;
+    }
+
+    public function setActif(bool $actif): static
+    {
+        $this->actif = $actif;
+
         return $this;
     }
 }
