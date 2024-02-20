@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -29,17 +31,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $firstname = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $lastname = null;
-
     #[ORM\Column(length: 50)]
     private ?string $login = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $phone = null;
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Profile $profile = null;
+
+    #[ORM\Column]
+    private ?bool $actif = null;
+
+    #[ORM\OneToOne(mappedBy: 'organizer', cascade: ['persist', 'remove'])]
+    private ?Meeting $meetingOrganization = null;
+
+    #[ORM\ManyToMany(targetEntity: Meeting::class, mappedBy: 'participants')]
+    private Collection $meetingParticipation;
+
+    public function __construct()
+    {
+        $this->meetingParticipation = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -61,7 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * A visual identifier that represents this user.
      *
-     * @see UserInterface
+     * @see UserInterface-
      */
     public function getUserIdentifier(): string
     {
@@ -111,30 +121,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname): static
-    {
-        $this->firstname = $firstname;
-
-        return $this;
-    }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(string $lastname): static
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
     public function getLogin(): ?string
     {
         return $this->login;
@@ -147,14 +133,69 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPhone(): ?string
+    public function getProfile(): ?Profile
     {
-        return $this->phone;
+        return $this->profile;
     }
 
-    public function setPhone(string $phone): static
+    public function setProfile(?Profile $profile): static
     {
-        $this->phone = $phone;
+        $this->profile = $profile;
+        return $this;
+    }
+
+    public function isActif(): ?bool
+    {
+        return $this->actif;
+    }
+
+    public function setActif(bool $actif): static
+    {
+        $this->actif = $actif;
+
+        return $this;
+    }
+
+    public function getMeetingOrganization(): ?Meeting
+    {
+        return $this->meetingOrganization;
+    }
+
+    public function setMeetingOrganization(Meeting $meetingOrganization): static
+    {
+        // set the owning side of the relation if necessary
+        if ($meetingOrganization->getOrganizer() !== $this) {
+            $meetingOrganization->setOrganizer($this);
+        }
+
+        $this->meetingOrganization = $meetingOrganization;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Meeting>
+     */
+    public function getMeetingParticipation(): Collection
+    {
+        return $this->meetingParticipation;
+    }
+
+    public function addMeetingParticipation(Meeting $meetingParticipation): static
+    {
+        if (!$this->meetingParticipation->contains($meetingParticipation)) {
+            $this->meetingParticipation->add($meetingParticipation);
+            $meetingParticipation->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeetingParticipation(Meeting $meetingParticipation): static
+    {
+        if ($this->meetingParticipation->removeElement($meetingParticipation)) {
+            $meetingParticipation->removeParticipant($this);
+        }
 
         return $this;
     }

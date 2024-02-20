@@ -24,8 +24,14 @@
            value="{{ csrf_token('authenticate') }}"
     >
 
+    <label>
+        <input type="checkbox" name="_remember_me" checked>
+        Rester connecté
+    </label>
+
     <button class="btn btn-lg btn-primary" type="submit">
         Sign in
     </button>
+
 </form>
 {% endblock %}
