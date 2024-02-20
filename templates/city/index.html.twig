@@ -1,23 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}City index{% endblock %}
+{% block title %}Villes{% endblock %}
 
 {% block body %}
-    <h1>City index</h1>
+    <h1>Villes</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Zip</th>
-                <th>actions</th>
+                <th>Nom de la ville</th>
+                <th>Code postal</th>
+
             </tr>
         </thead>
         <tbody>
         {% for city in cities %}
             <tr>
-                <td>{{ city.id }}</td>
                 <td>{{ city.name }}</td>
                 <td>{{ city.zip }}</td>
                 <td>
@@ -27,11 +25,11 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="4">Pas de ville trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_city_new') }}">Create new</a>
+    <a href="{{ path('app_city_new') }}">Ajouter une ville</a>
 {% endblock %}
