@@ -15,7 +15,14 @@ class MeetingType extends AbstractType
         $builder
             ->add('name')
             ->add('duration')
-            ->add('date')
+            ->add('date', DateType::class, [
+                'label' => 'Date',
+                'widget' => 'single_text',
+                'html5' => true,
+                'attr' => [
+                    'min' => (new \DateTime())->format('Y-m-d')
+                ]
+            ])
             ->add('usersMax')
             ->add('limitDate')
             ->add('textNote')
