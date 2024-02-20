@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -37,6 +39,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $actif = null;
+
+    #[ORM\OneToOne(mappedBy: 'organizer', cascade: ['persist', 'remove'])]
+    private ?Meeting $meetingOrganization = null;
+
+    #[ORM\ManyToMany(targetEntity: Meeting::class, mappedBy: 'participants')]
+    private Collection $meetingParticipation;
+
+    public function __construct()
+    {
+        $this->meetingParticipation = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -139,6 +152,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActif(bool $actif): static
     {
         $this->actif = $actif;
+
+        return $this;
+    }
+
+    public function getMeetingOrganization(): ?Meeting
+    {
+        return $this->meetingOrganization;
+    }
+
+    public function setMeetingOrganization(Meeting $meetingOrganization): static
+    {
+        // set the owning side of the relation if necessary
+        if ($meetingOrganization->getOrganizer() !== $this) {
+            $meetingOrganization->setOrganizer($this);
+        }
+
+        $this->meetingOrganization = $meetingOrganization;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Meeting>
+     */
+    public function getMeetingParticipation(): Collection
+    {
+        return $this->meetingParticipation;
+    }
+
+    public function addMeetingParticipation(Meeting $meetingParticipation): static
+    {
+        if (!$this->meetingParticipation->contains($meetingParticipation)) {
+            $this->meetingParticipation->add($meetingParticipation);
+            $meetingParticipation->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeetingParticipation(Meeting $meetingParticipation): static
+    {
+        if ($this->meetingParticipation->removeElement($meetingParticipation)) {
+            $meetingParticipation->removeParticipant($this);
+        }
 
         return $this;
     }
