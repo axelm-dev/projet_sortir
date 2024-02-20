@@ -41,6 +41,10 @@ class Meeting
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'meetingParticipation')]
     private Collection $participants;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?StateMeeting $state = null;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -155,6 +159,18 @@ class Meeting
     public function removeParticipant(User $participant): static
     {
         $this->participants->removeElement($participant);
+
+        return $this;
+    }
+
+    public function getState(): ?StateMeeting
+    {
+        return $this->state;
+    }
+
+    public function setState(?StateMeeting $state): static
+    {
+        $this->state = $state;
 
         return $this;
     }
