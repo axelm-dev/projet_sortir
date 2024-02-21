@@ -26,6 +26,7 @@ class RegistrationFormType extends AbstractType
                 'required'=>true,
             ])
             ->add('login')
+            ->add('campus')
             ->add('email')
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
