@@ -2,14 +2,14 @@
 namespace App\Controller\Admin;
 
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use App\Entity\User;
+use App\Entity\Campus;
 
-class UserController extends AbstractCrudController
+class CampusController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
-        {
-        return User::class;
-        }
+    {
+        return Campus::class;
+    }
 
 
 }

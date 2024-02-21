@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Campus;
 use App\Entity\City;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -54,6 +55,10 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::section('Users');
         yield MenuItem::linkToCrud('Users', 'fa fa-user', User::class);
+        yield MenuItem::section('City');
+        yield MenuItem::linkToCrud('City', 'fa fa-city', City::class);
+        yield MenuItem::section('Campus');
+        yield MenuItem::linkToCrud('Campus', 'fa fa-city', Campus::class);
         yield MenuItem::linkToUrl('Retour au site', 'fa fa-home', '/');
 
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
