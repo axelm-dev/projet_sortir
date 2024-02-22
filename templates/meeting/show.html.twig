@@ -8,31 +8,51 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ meeting.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
+                <th>Nom de la sortie</th>
                 <td>{{ meeting.name }}</td>
             </tr>
             <tr>
-                <th>Date</th>
-                <td>{{ meeting.date ? meeting.date|date('Y-m-d H:i:s') : '' }}</td>
+                <th>Organisateur</th>
+                <td>{{ meeting.organizer.login }}</td>
+            </tr>
+             <tr>
+                <th>Campus</th>
+                <td>{{ meeting.campus.name }}</td>
             </tr>
             <tr>
-                <th>UsersMax</th>
+                <th>Lieu</th>
+                <td>{{ meeting.place.name }}</td>
+            </tr>
+            <tr>
+                <th>Ville</th>
+                <td>{{ meeting.place.city.name }}</td>
+            </tr>
+            <tr>
+                <th>Durée</th>
+                <td>{{ meeting.duration }}h</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ meeting.date ? meeting.date|date('Y-m-d H:i') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Nombre de participants maximum</th>
                 <td>{{ meeting.usersMax }}</td>
             </tr>
             <tr>
-                <th>TextNote</th>
+                <th>Participants inscrits</th>
+                <td>{{ meeting.usersMax }}</td>
+            </tr>
+            <tr>
+                <th>Sortie</th>
+                <td>{{ meeting.state.value }}</td>
+            </tr>
+            <tr>
+                <th>Information</th>
                 <td>{{ meeting.textNote }}</td>
             </tr>
             <tr>
-                <th>Duration</th>
-                <td>{{ meeting.duration }}</td>
-            </tr>
-            <tr>
-                <th>LimitDate</th>
+                <th>Date limite d'inscription</th>
                 <td>{{ meeting.limitDate ? meeting.limitDate|date('Y-m-d') : '' }}</td>
             </tr>
         </tbody>
@@ -40,7 +60,9 @@
 
     <a href="{{ path('app_meeting_index') }}">back to list</a>
 
-    <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}">edit</a>
+    <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}">Modifier</a>
+    <a href="{{ path('app_meeting_publish', {'id': meeting.id}) }}">Publier</a>
+    <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}">Annuler</a>
 
     {{ include('meeting/_delete_form.html.twig') }}
 {% endblock %}

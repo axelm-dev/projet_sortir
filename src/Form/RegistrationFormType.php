@@ -23,7 +23,7 @@ class RegistrationFormType extends AbstractType
             ->add('campus',EntityType::class,[
                 'class'=>Campus::class,
                 'choice_label' => 'name',
-                'placeholder'=>'choisir un campus',
+                'placeholder'=>'Choisir un campus',
                 'required'=>true,
             ])
             ->add('login')

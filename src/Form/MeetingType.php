@@ -2,9 +2,15 @@
 
 namespace App\Form;
 
+use App\Entity\Campus;
+use App\Entity\City;
 use App\Entity\Meeting;
+use App\Entity\Place;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,19 +19,39 @@ class MeetingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('campus')
+            ->add('name', TextType::class, [
+                'label' => 'Nom de la sortie'
+            ])
+            ->add('campus',EntityType::class,[
+                'class'=>Campus::class,
+                'choice_label' => 'name',
+                'placeholder'=>'Choisir un campus',
+                'required'=>true,
+            ])
+            ->add('place',EntityType::class,[
+                'class'=>Place::class,
+                'choice_label' => 'name',
+                'placeholder'=>'Choisir un lieu',
+                'required'=>true,
+            ])
             ->add('duration')
-            ->add('date', DateType::class, [
+            ->add('date', DateTimeType::class, [
                 'label' => 'Date',
+                'widget' => 'single_text',
+                'html5' => true,
+                'attr' => [
+                    'min' => (new \DateTime())->format('Y-m-d h:i')
+                ]
+            ])
+            ->add('usersMax')
+            ->add('limitDate', DateType::class, [
+                'label' => 'Date limite d\'inscription',
                 'widget' => 'single_text',
                 'html5' => true,
                 'attr' => [
                     'min' => (new \DateTime())->format('Y-m-d')
                 ]
             ])
-            ->add('usersMax')
-            ->add('limitDate')
             ->add('textNote')
         ;
     }
