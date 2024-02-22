@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Campus;
-use App\Entity\City;
 use App\Entity\Meeting;
 use App\Entity\Place;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
