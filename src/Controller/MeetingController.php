@@ -122,7 +122,7 @@ class MeetingController extends AbstractController
 
         return $this->render('meeting/edit.html.twig', [
             'meeting' => $meeting,
-            'form' => $form,
+            'meetingForm' => $form,
         ]);
     }
 
