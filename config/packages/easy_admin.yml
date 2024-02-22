@@ -2,3 +2,24 @@ easy_admin:
   design:
     templates:
       layout: 'bundles/EasyAdminBundle/default/layout.html.twig'
+    menu:
+      - { entity: 'User', label: 'Utilisateurs' }
+
+  entities:
+        User:
+          class: App\Entity\User
+          list:
+            fields:
+              - 'login'
+              - 'email'
+              - 'actif'
+          edit:
+            fields:
+              - 'login'
+              - 'email'
+              - 'actif'
+          form_actions:
+            'edit_confirm_password':
+              label: 'Confirmer le mot de passe'
+              type: 'action'
+              action: 'App\Action\EditConfirmPasswordAction'
