@@ -1,11 +1,13 @@
 {{ form_start(meetingForm) }}
         {{ form_row(meetingForm.name) }}
+        {{ form_row(meetingForm.campus) }}
+        {{ form_row(meetingForm.place) }}
         {{ form_row(meetingForm.duration) }}
         {{ form_row(meetingForm.date)}}
         {{ form_row(meetingForm.usersMax)}}
         {{ form_row(meetingForm.limitDate)}}
         {{ form_row(meetingForm.textNote)}}
-        <button class="btn">{{ button_label|default('Save') }}</button>
+        <button class="btn">{{ button_label|default('Créer') }}</button>
 {{ form_end(meetingForm) }}
 
 

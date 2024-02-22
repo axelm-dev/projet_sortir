@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a644daf2c7095aac03121a6e599b1160",
+    "content-hash": "833c961c37491c399d7a8d2f08235332",
     "packages": [
         {
             "name": "composer/semver",
@@ -1680,16 +1680,16 @@
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "1.8.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "fad452781b3d774e3337b0c0b245dd8e5a4455fc"
+                "reference": "bc3dc91a5e9b14aa06d1d9e90647c5c5a2cc5353"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/fad452781b3d774e3337b0c0b245dd8e5a4455fc",
-                "reference": "fad452781b3d774e3337b0c0b245dd8e5a4455fc",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/bc3dc91a5e9b14aa06d1d9e90647c5c5a2cc5353",
+                "reference": "bc3dc91a5e9b14aa06d1d9e90647c5c5a2cc5353",
                 "shasum": ""
             },
             "require": {
@@ -1732,9 +1732,9 @@
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
             "support": {
                 "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.8.0"
+                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.8.1"
             },
-            "time": "2024-01-11T11:49:22+00:00"
+            "time": "2024-01-18T19:15:27+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -3802,6 +3802,71 @@
                 }
             ],
             "time": "2024-01-29T15:41:16+00:00"
+        },
+        {
+            "name": "symfony/google-mailer",
+            "version": "v7.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/google-mailer.git",
+                "reference": "afa051a4ae1f76609024708ad1a65b2b1c64c9ae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/google-mailer/zipball/afa051a4ae1f76609024708ad1a65b2b1c64c9ae",
+                "reference": "afa051a4ae1f76609024708ad1a65b2b1c64c9ae",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "symfony/mailer": "^6.4|^7.0"
+            },
+            "require-dev": {
+                "symfony/http-client": "^6.4|^7.0"
+            },
+            "type": "symfony-mailer-bridge",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Mailer\\Bridge\\Google\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Google Mailer Bridge",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/google-mailer/tree/v7.0.3"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-01-23T15:02:46+00:00"
         },
         {
             "name": "symfony/http-client",
@@ -6341,16 +6406,16 @@
         },
         {
             "name": "symfony/stimulus-bundle",
-            "version": "v2.14.2",
+            "version": "v2.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stimulus-bundle.git",
-                "reference": "f775f6e811215156bfe41e6be234272d0c27e02b"
+                "reference": "c113ab8e92c6b14659f6be4e9bef5c1f4c4a000e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/stimulus-bundle/zipball/f775f6e811215156bfe41e6be234272d0c27e02b",
-                "reference": "f775f6e811215156bfe41e6be234272d0c27e02b",
+                "url": "https://api.github.com/repos/symfony/stimulus-bundle/zipball/c113ab8e92c6b14659f6be4e9bef5c1f4c4a000e",
+                "reference": "c113ab8e92c6b14659f6be4e9bef5c1f4c4a000e",
                 "shasum": ""
             },
             "require": {
@@ -6360,7 +6425,7 @@
                 "symfony/deprecation-contracts": "^2.0|^3.0",
                 "symfony/finder": "^5.4|^6.0|^7.0",
                 "symfony/http-kernel": "^5.4|^6.0|^7.0",
-                "twig/twig": "^2.15.3|^3.4.3"
+                "twig/twig": "^2.15.3|~3.8.0"
             },
             "require-dev": {
                 "symfony/asset-mapper": "^6.3|^7.0",
@@ -6390,7 +6455,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/stimulus-bundle/tree/v2.14.2"
+                "source": "https://github.com/symfony/stimulus-bundle/tree/v2.15.0"
             },
             "funding": [
                 {
@@ -6406,7 +6471,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-07T20:26:48+00:00"
+            "time": "2024-02-14T16:26:57+00:00"
         },
         {
             "name": "symfony/stopwatch",
@@ -6996,16 +7061,16 @@
         },
         {
             "name": "symfony/ux-turbo",
-            "version": "v2.14.2",
+            "version": "v2.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-turbo.git",
-                "reference": "7cd466f33950aa82a2b7e1485d62d8da726a0051"
+                "reference": "d3590a43fee73304855dfc8022ccb57b0df9f03d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-turbo/zipball/7cd466f33950aa82a2b7e1485d62d8da726a0051",
-                "reference": "7cd466f33950aa82a2b7e1485d62d8da726a0051",
+                "url": "https://api.github.com/repos/symfony/ux-turbo/zipball/d3590a43fee73304855dfc8022ccb57b0df9f03d",
+                "reference": "d3590a43fee73304855dfc8022ccb57b0df9f03d",
                 "shasum": ""
             },
             "require": {
@@ -7072,7 +7137,7 @@
                 "turbo-stream"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-turbo/tree/v2.14.2"
+                "source": "https://github.com/symfony/ux-turbo/tree/v2.15.0"
             },
             "funding": [
                 {
@@ -7088,7 +7153,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-07T20:26:48+00:00"
+            "time": "2024-02-20T16:11:17+00:00"
         },
         {
             "name": "symfony/validator",
@@ -7496,6 +7561,52 @@
             "time": "2024-01-23T15:02:46+00:00"
         },
         {
+            "name": "symfonycasts/reset-password-bundle",
+            "version": "v1.20.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SymfonyCasts/reset-password-bundle.git",
+                "reference": "df64d82cca2ee371da5e8c03c227457069ae663e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SymfonyCasts/reset-password-bundle/zipball/df64d82cca2ee371da5e8c03c227457069ae663e",
+                "reference": "df64d82cca2ee371da5e8c03c227457069ae663e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=8.1.10",
+                "symfony/config": "^5.4 | ^6.0 | ^7.0",
+                "symfony/dependency-injection": "^5.4 | ^6.0 | ^7.0",
+                "symfony/deprecation-contracts": "^2.2 | ^3.0",
+                "symfony/http-kernel": "^5.4 | ^6.0 | ^7.0"
+            },
+            "require-dev": {
+                "doctrine/annotations": "^1.0",
+                "doctrine/doctrine-bundle": "^2.8",
+                "doctrine/orm": "^2.13",
+                "symfony/framework-bundle": "^5.4 | ^6.0 | ^7.0",
+                "symfony/phpunit-bridge": "^5.4 | ^6.0 | ^7.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "SymfonyCasts\\Bundle\\ResetPassword\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Symfony bundle that adds password reset functionality.",
+            "support": {
+                "issues": "https://github.com/SymfonyCasts/reset-password-bundle/issues",
+                "source": "https://github.com/SymfonyCasts/reset-password-bundle/tree/v1.20.3"
+            },
+            "time": "2024-02-20T10:51:53+00:00"
+        },
+        {
             "name": "twig/extra-bundle",
             "version": "v3.8.0",
             "source": {
@@ -7829,16 +7940,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.0.0",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "4a21235f7e56e713259a6f76bf4b5ea08502b9dc"
+                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/4a21235f7e56e713259a6f76bf4b5ea08502b9dc",
-                "reference": "4a21235f7e56e713259a6f76bf4b5ea08502b9dc",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/2218c2252c874a4624ab2f613d86ac32d227bc69",
+                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69",
                 "shasum": ""
             },
             "require": {
@@ -7881,9 +7992,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.1"
             },
-            "time": "2024-01-07T17:17:35+00:00"
+            "time": "2024-02-21T19:24:10+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -9658,16 +9769,16 @@
         },
         {
             "name": "symfony/maker-bundle",
-            "version": "v1.54.0",
+            "version": "v1.55.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "a8523cf35d777bf2d8cf5703fa73f378fdc27125"
+                "reference": "11a9d3125c5b93ab4043f0f2e9927fdc55881c17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/a8523cf35d777bf2d8cf5703fa73f378fdc27125",
-                "reference": "a8523cf35d777bf2d8cf5703fa73f378fdc27125",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/11a9d3125c5b93ab4043f0f2e9927fdc55881c17",
+                "reference": "11a9d3125c5b93ab4043f0f2e9927fdc55881c17",
                 "shasum": ""
             },
             "require": {
@@ -9730,7 +9841,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/maker-bundle/issues",
-                "source": "https://github.com/symfony/maker-bundle/tree/v1.54.0"
+                "source": "https://github.com/symfony/maker-bundle/tree/v1.55.1"
             },
             "funding": [
                 {
@@ -9746,7 +9857,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-06T21:23:55+00:00"
+            "time": "2024-02-21T13:41:51+00:00"
         },
         {
             "name": "symfony/phpunit-bridge",
@@ -9972,5 +10083,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
