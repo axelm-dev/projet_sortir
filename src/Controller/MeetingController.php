@@ -16,11 +16,40 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/meeting')]
 class MeetingController extends AbstractController
 {
-    #[Route('/', name: 'app_meeting_index', methods: ['GET'])]
-    public function index(MeetingRepository $meetingRepository): Response
+    #[Route('/', name: 'app_meeting_index', methods: ['GET', 'POST'])]
+    public function index(EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, StateMeetingRepository $stateMeetingRepository): Response
     {
+        $meetings = $meetingRepository->findAll();
+
+
+        foreach($meetings as $meeting) {
+            $state = $meeting->getState();
+
+            if(($state->getValue() !== "Créée") && ($state->getValue() !== "Annulée")) {
+                $dateNow = date('d-m-Y H:i');
+
+                switch ($dateNow) {
+                    case $dateNow <= $meeting->getLimitDate():
+                        $state = $stateMeetingRepository->findOneBy(['value'=>'Ouverte']);
+                        break;
+                    case $dateNow > $meeting->getLimitDate():
+                        $state = $stateMeetingRepository->findOneBy(['value'=>'Clôturée']);
+                        break;
+                    case $dateNow = $meeting->getDate() :
+                        $state = $stateMeetingRepository->findOneBy(['value'=>'Activité en cours']);
+                        break;
+                    case $dateNow > $meeting->getDate() :
+                        $state = $stateMeetingRepository->findOneBy(['value'=>'Passée']);
+                        break;
+                }
+
+                $meeting->setState($state);
+                $entityManager->flush();
+            }
+        }
+
         return $this->render('meeting/index.html.twig', [
-            'meetings' => $meetingRepository->findAll(),
+            'meetings' => $meetings,
         ]);
     }
 

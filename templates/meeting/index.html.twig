@@ -12,11 +12,14 @@
                     <thead class="custom-thead">
                         <tr>
                             <th>Nom</th>
+                            <th>Campus</th>
+                            <th>Organisateur</th>
+                            <th>Lieu</th>
+                            <th>Ville</th>
                             <th>Date</th>
-                            <th>Durée</th>
-                            <th>Nombre de participants maximum</th>
-                            <th>Date limite d'inscription</th>
-                            <th>Informations</th>
+                            <th>Sortie</th>
+                            <th>Nombre d'inscrits</th>
+                            <th>Inscription jusqu'au</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -24,11 +27,14 @@
                     {% for meeting in meetings %}
                         <tr>
                             <td>{{ meeting.name }}</td>
-                            <td>{{ meeting.date ? meeting.date|date('Y-m-d H:i:s') : '' }}</td>
-                            <td>{{ meeting.duration }}</td>
-                            <td>{{ meeting.usersMax }}</td>
-                            <td>{{ meeting.limitDate ? meeting.limitDate|date('Y-m-d') : '' }}</td>
-                            <td>{{ meeting.textNote }}</td>
+                            <td>{{ meeting.campus.name }}</td>
+                            <td>{{ meeting.organizer.login }}</td>
+                            <td>{{ meeting.place.name }}</td>
+                            <td>{{ meeting.place.city.name }}</td>
+                            <td>{{ meeting.date ? meeting.date|date('d-m-Y H:i') }}</td>
+                            <td>{{ meeting.state.value }}</td>
+                            <td>{{ meeting.usersMax }}/{{ meeting.usersMax }}</td>
+                            <td>{{ meeting.limitDate ? meeting.limitDate|date('d-m-Y') : '' }}</td>
                             <td>
                                 <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}">show</a>
                                 <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}">edit</a>
