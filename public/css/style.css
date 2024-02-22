@@ -1,0 +1,139 @@
+body {
+    background: linear-gradient(-45deg, #4d5da9, rgba(163, 60, 231, 0.76), #46b4de, rgba(35, 213, 186, 0.8));
+    background-size: 400% 400%;
+    font-family: Consolas, serif;
+    color: #fff;
+    animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+/* Styles for header */
+
+header {
+    font-size: large;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    margin-bottom: 40px;
+    padding: 0 20px 20px;
+    z-index: 1000; /* Pour s'assurer que la barre de navigation reste au-dessus du contenu */
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #fff; /* Changement de couleur pour correspondre au corps de la page */
+}
+
+.navbar-nav .nav-link {
+    color: #fff; /* Changement de couleur pour correspondre au corps de la page */
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #0a0a0a;
+}
+
+/* Styles for main content */
+main {
+    overflow-y: auto; /* Permet le défilement vertical uniquement si le contenu dépasse la hauteur maximale */
+    padding: 150px 20px 20px; /* Ajout de padding pour compenser la hauteur de la barre de navigation fixe */
+    height: 80vh;
+}
+
+/* Styles for footer */
+footer {
+    color: #fff;
+    padding: 10px 0;
+}
+
+/* General styles */
+.container-fluid {
+    margin-top: 20px;
+}
+
+/* Styles pour le bouton personnalisé */
+.btn-custom {
+    background-color: rgb(2, 34, 122, 0.3); /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    padding: 10px 20px; /* Espacement intérieur */
+    font-size: 16px; /* Taille de la police */
+    cursor: pointer; /* Curseur pointer */
+    border-radius: 5px; /* Bordure arrondie */
+    box-shadow: 4px 2px 11px rgba(0, 0, 0, 0.6);
+}
+
+/* Au survol */
+.btn-custom:hover {
+    background-color: rgba(2, 34, 122, 0.4); /* Couleur de fond au survol */
+}
+
+.custom-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.table-responsive {
+    border-radius: 10px;
+    box-shadow: 6px 6px 11px rgba(0, 0, 0, 0.6);
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 10px;
+}
+
+.custom-thead {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.custom-table th {
+    color: white;
+}
+
+.custom-table tbody tr:nth-of-type(even) {
+    background-color: #555;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .container-fluid {
+        margin-top: 0;
+    }
+
+    footer {
+        position: relative;
+    }
+
+    .fixed-bottom {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        bottom: 0;
+    }
+}
+
+/* Gradient animation */
+@keyframes gradient {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
