@@ -53,6 +53,9 @@ class Meeting
     #[ORM\JoinColumn(nullable: false)]
     private ?Campus $campus = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $annulation_reason = null;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -203,6 +206,18 @@ class Meeting
     public function setCampus(?Campus $campus): static
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    public function getAnnulationReason(): ?string
+    {
+        return $this->annulation_reason;
+    }
+
+    public function setAnnulationReason(?string $annulation_reason): static
+    {
+        $this->annulation_reason = $annulation_reason;
 
         return $this;
     }
