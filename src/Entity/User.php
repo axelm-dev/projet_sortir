@@ -40,9 +40,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $actif = null;
 
-    #[ORM\OneToOne(mappedBy: 'organizer', cascade: ['persist', 'remove'])]
-    private ?Meeting $meetingOrganization = null;
-
     #[ORM\ManyToMany(targetEntity: Meeting::class, mappedBy: 'participants')]
     private Collection $meetingParticipation;
 
@@ -50,9 +47,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Campus $campus = null;
 
+    #[ORM\OneToMany(targetEntity: Meeting::class, mappedBy: 'organizer', orphanRemoval: true)]
+    private Collection $meetingsOrganization;
+
     public function __construct()
     {
         $this->meetingParticipation = new ArrayCollection();
+        $this->meetingsOrganization = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -160,26 +161,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getMeetingOrganization(): ?Meeting
-    {
-        return $this->meetingOrganization;
-    }
-
-    public function setMeetingOrganization(Meeting $meetingOrganization): static
-    {
-        // set the owning side of the relation if necessary
-        if ($meetingOrganization->getOrganizer() !== $this) {
-            $meetingOrganization->setOrganizer($this);
-        }
-
-        $this->meetingOrganization = $meetingOrganization;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Meeting>
      */
+
     public function getMeetingParticipation(): Collection
     {
         return $this->meetingParticipation;
@@ -212,6 +197,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCampus(?Campus $campus): static
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Meeting>
+     */
+    public function getMeetingsOrganization(): Collection
+    {
+        return $this->meetingsOrganization;
+    }
+
+    public function addMeetingsOrganization(Meeting $meetingsOrganization): static
+    {
+        if (!$this->meetingsOrganization->contains($meetingsOrganization)) {
+            $this->meetingsOrganization->add($meetingsOrganization);
+            $meetingsOrganization->setOrganizer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeetingsOrganization(Meeting $meetingsOrganization): static
+    {
+        if ($this->meetingsOrganization->removeElement($meetingsOrganization)) {
+            // set the owning side to null (unless already changed)
+            if ($meetingsOrganization->getOrganizer() === $this) {
+                $meetingsOrganization->setOrganizer(null);
+            }
+        }
 
         return $this;
     }

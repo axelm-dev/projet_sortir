@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Meeting;
 use App\Entity\User;
+use App\Form\MeetingCancelType;
 use App\Form\MeetingType;
 use App\Repository\MeetingRepository;
 use App\Repository\StateMeetingRepository;
@@ -101,13 +102,22 @@ class MeetingController extends AbstractController
         return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
     }
     #[Route('/{id}/cancel', name: 'app_meeting_cancel', methods: ['GET', 'POST'])]
-    public function cancel(Meeting $meeting, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
+    public function cancel(Request $request, Meeting $meeting, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
-        $state = $stateMeetingRepository->findOneBy(['value'=>'Annulée']);
-        $meeting->setState($state);
-        $entityManager->flush();
-        $this->addFlash('success', 'Votre sortie a bien été annulée !');
-        return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        $form = $this->createForm(MeetingCancelType::class, $meeting);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $state = $stateMeetingRepository->findOneBy(['value'=>'Annulée']);
+            $meeting->setState($state);
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre sortie a bien été annulée !');
+            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        }
+        return $this->render('meeting/cancel.html.twig', [
+            'meeting' => $meeting,
+            'meetingCancelForm' => $form,
+        ]);
     }
 
     #[Route('/{id}/edit', name: 'app_meeting_edit', methods: ['GET', 'POST'])]
@@ -119,12 +129,12 @@ class MeetingController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+            $this->redirectToRoute('app_meeting_show', ['id' =>$meeting->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('meeting/edit.html.twig', [
             'meeting' => $meeting,
-            'form' => $form,
+            'meetingForm' => $form,
         ]);
     }
 
