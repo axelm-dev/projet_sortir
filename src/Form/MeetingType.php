@@ -51,7 +51,10 @@ class MeetingType extends AbstractType
                     'min' => (new \DateTime())->format('Y-m-d')
                 ]
             ])
-            ->add('textNote')
+            ->add('textNote',TextType::class,[
+                'label'=>'Description',
+                'required'=>false,
+            ])
         ;
     }
 

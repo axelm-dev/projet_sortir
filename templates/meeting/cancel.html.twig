@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cancel Meeting{% endblock %}
+
+{% block body %}
+    <h1>Annuler la sortie</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nom de la sortie</th>
+                <td>{{ meeting.name }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ meeting.date ? meeting.date|date('Y-m-d H:i') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Ville</th>
+                <td>{{ meeting.place.city.name }}</td>
+            </tr>
+            <tr>
+                <th>Lieu</th>
+                <td>{{ meeting.place.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{ form_start(meetingCancelForm) }}
+        {{ form_row(meetingCancelForm.annulation_reason) }}
+        <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}" class="btn-custom">Enregistrer</a>
+        <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}" class="btn-custom">Annuler</a>
+    {{  form_end(meetingCancelForm) }}
+
+{% endblock %}
