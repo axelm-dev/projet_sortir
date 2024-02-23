@@ -137,14 +137,13 @@ class MeetingController extends AbstractController
         ]);
     }
     #[Route('/{id}/sign', name: 'app_meeting_sign', methods: ['GET', 'POST'])]
-    public function sign(Request $request, User $user, Meeting $meeting, EntityManagerInterface $entityManager): Response
+    public function sign(Request $request, User $user, Meeting $meeting, EntityManagerInterface $entityManager, MeetingRepository $meetingRepository): Response
     {
-
+//        if ($meeting->getParticipants())
         $user->addMeetingParticipation($meeting);
         $meeting->setNbUser($meeting->getNbUser() + 1);
         $entityManager->flush();
         $this->addFlash('success', 'Vous participez !');
-//        dd($meeting->getParticipants());
         return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
     }
     #[Route('/{id}/unsign', name: 'app_meeting_unsign', methods: ['GET', 'POST'])]
