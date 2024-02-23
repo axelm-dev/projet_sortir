@@ -27,23 +27,21 @@ class MeetingController extends AbstractController
 
         foreach($meetings as $meeting) {
             $state = $meeting->getState();
+            $endDate = clone $meeting->getDate();
+            $endDate->modify('+' . $meeting->getDuration() . 'minute');
 
             if(($state->getValue() !== "Créée") && ($state->getValue() !== "Annulée")) {
-                $dateNow = date('d-m-Y H:i');
+                $dateNow = new \DateTime('now');
 
-                switch ($dateNow) {
-                    case $dateNow <= $meeting->getLimitDate():
-                        $state = $stateMeetingRepository->findOneBy(['value'=>'Ouverte']);
-                        break;
-                    case $dateNow > $meeting->getLimitDate():
-                        $state = $stateMeetingRepository->findOneBy(['value'=>'Clôturée']);
-                        break;
-                    case $dateNow = $meeting->getDate() :
-                        $state = $stateMeetingRepository->findOneBy(['value'=>'Activité en cours']);
-                        break;
-                    case $dateNow > $meeting->getDate() :
-                        $state = $stateMeetingRepository->findOneBy(['value'=>'Passée']);
-                        break;
+
+                if ($dateNow <= $meeting->getLimitDate()) {
+                    $state = $stateMeetingRepository->findOneBy(['value'=>'Ouverte']);
+                } elseif ($dateNow >= $meeting->getDate() && $dateNow <= $endDate) {
+                    $state = $stateMeetingRepository->findOneBy(['value'=>'Activité en cours']);
+                } elseif ($dateNow > $endDate) {
+                    $state = $stateMeetingRepository->findOneBy(['value'=>'Passée']);
+                } else {
+                    $state = $stateMeetingRepository->findOneBy(['value'=>'Clôturée']);
                 }
 
                 $meeting->setState($state);
