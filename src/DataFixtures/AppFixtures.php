@@ -32,7 +32,7 @@ class AppFixtures extends Fixture
         PlaceFactory::createMany(10);
 
         StateMeetingFactory::createOne(['value' => 'Créée']);
-        StateMeetingFactory::createOne(['value' => 'Publiée']);
+        StateMeetingFactory::createOne(['value' => 'Ouverte']);
         StateMeetingFactory::createOne(['value' => 'Clôturée']);
         StateMeetingFactory::createOne(['value' => "Activité en cours"]);
         StateMeetingFactory::createOne(['value' => 'Passée']);
