@@ -56,6 +56,9 @@ class Meeting
     #[ORM\JoinColumn(nullable: false)]
     private ?User $organizer = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $nb_user = null;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -218,6 +221,18 @@ class Meeting
     public function setOrganizer(?User $organizer): static
     {
         $this->organizer = $organizer;
+
+        return $this;
+    }
+
+    public function getNbUser(): ?int
+    {
+        return $this->nb_user;
+    }
+
+    public function setNbUser(?int $nb_user): static
+    {
+        $this->nb_user = $nb_user;
 
         return $this;
     }

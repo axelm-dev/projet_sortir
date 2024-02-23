@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Meeting{% endblock %}
+
+{% block body %}
+    <h1>Edit Meeting</h1>
+
+
+    <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}" class="btn-custom">S'inscrire?</a>
+    <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}" class="btn-custom">Annuler</a>
+
+{% endblock %}

@@ -27,7 +27,7 @@
                             <td>{{ meeting.name }}</td>
                             <td>{{ meeting.date ? meeting.date|date('d-m-Y H:i') }}</td>
                             <td>{{ meeting.limitDate ? meeting.limitDate|date('d-m-Y') : '' }}</td>
-                            <td>{{ meeting.usersMax }}/{{ meeting.usersMax }}</td>
+                            <td>{{ meeting.nbUser }}/{{ meeting.usersMax }}</td>
                             <td>{{ meeting.organizer.login }}</td>
                             <td></td>
                             <td>{{ meeting.state.value }}</td>
@@ -47,9 +47,9 @@
 
                                 {% endif %}
 
-                                {% if meeting.organizer != app.user %}
-                                    <a href="">S'inscrire</a>
-                                    <a href="">Se désister</a>
+                                {% if meeting.organizer != app.user and meeting.participants != app.user %}
+                                    <a href="{{ path('app_meeting_sign',  {'id': meeting.id}) }}">S'inscrire</a>
+                                    <a href="{{ path('app_meeting_unsign',  {'id': meeting.id}) }}">Se désister</a>
                                 {% endif %}
                             </td>
                         </tr>

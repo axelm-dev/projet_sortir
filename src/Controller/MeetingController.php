@@ -6,6 +6,7 @@ use App\Entity\Meeting;
 use App\Entity\User;
 use App\Form\MeetingCancelType;
 use App\Form\MeetingType;
+use App\Form\SignMeetingType;
 use App\Repository\MeetingRepository;
 use App\Repository\StateMeetingRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -135,6 +136,29 @@ class MeetingController extends AbstractController
             'meetingForm' => $form,
         ]);
     }
+    #[Route('/{id}/sign', name: 'app_meeting_sign', methods: ['GET', 'POST'])]
+    public function sign(Request $request, User $user, Meeting $meeting, EntityManagerInterface $entityManager): Response
+    {
+
+        $user->addMeetingParticipation($meeting);
+        $meeting->setNbUser($meeting->getNbUser() + 1);
+        $entityManager->flush();
+        $this->addFlash('success', 'Vous participez !');
+//        dd($meeting->getParticipants());
+        return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/{id}/unsign', name: 'app_meeting_unsign', methods: ['GET', 'POST'])]
+    public function unsign(Request $request, User $user, Meeting $meeting, EntityManagerInterface $entityManager): Response
+    {
+        $user->addMeetingParticipation($meeting);
+        $meeting->setNbUser($meeting->getNbUser()-1);
+        $entityManager->flush();
+        $this->addFlash('success', 'Vous participez !');
+//        dd($meeting->getParticipants());
+        return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
 
     #[Route('/{id}', name: 'app_meeting_delete', methods: ['POST'])]
     public function delete(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
