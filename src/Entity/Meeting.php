@@ -34,10 +34,6 @@ class Meeting
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $limitDate = null;
 
-    #[ORM\OneToOne(inversedBy: 'meetingOrganization', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $organizer = null;
-
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'meetingParticipation')]
     private Collection $participants;
 
@@ -55,6 +51,10 @@ class Meeting
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $annulation_reason = null;
+
+    #[ORM\ManyToOne(inversedBy: 'meetingsOrganization')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $organizer = null;
 
     public function __construct()
     {
@@ -138,18 +138,6 @@ class Meeting
         return $this;
     }
 
-    public function getOrganizer(): ?User
-    {
-        return $this->organizer;
-    }
-
-    public function setOrganizer(User $organizer): static
-    {
-        $this->organizer = $organizer;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, User>
      */
@@ -218,6 +206,18 @@ class Meeting
     public function setAnnulationReason(?string $annulation_reason): static
     {
         $this->annulation_reason = $annulation_reason;
+
+        return $this;
+    }
+
+    public function getOrganizer(): ?User
+    {
+        return $this->organizer;
+    }
+
+    public function setOrganizer(?User $organizer): static
+    {
+        $this->organizer = $organizer;
 
         return $this;
     }

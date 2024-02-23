@@ -47,7 +47,7 @@ final class CampusFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'name' => self::faker()->text(50),
+            'name' => self::faker()->text(20),
         ];
     }
 

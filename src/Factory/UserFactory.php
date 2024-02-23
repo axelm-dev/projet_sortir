@@ -50,7 +50,7 @@ final class UserFactory extends ModelFactory
         return [
             'actif' => true,
             'email' => self::faker()->unique()->email(),
-            'login' => self::faker()->unique()->firstName(),
+            'login' => self::faker()->unique()->userName(),
             'campus' => CampusFactory::new(),
             'password' => 'test',
             'roles' => ['ROLE_USER']
