@@ -4,7 +4,11 @@ namespace App\Controller\Admin;
 
 use App\Entity\Campus;
 use App\Entity\City;
+use App\Entity\Meeting;
+use App\Entity\Place;
 use App\Entity\User;
+use App\Repository\MeetingRepository;
+use App\Repository\UserRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -15,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class DashboardController extends AbstractDashboardController
 {
-    public function __construct()
+    public function __construct(private UserRepository $repoUser, private MeetingRepository $repoMeeting)
     {
     }
 
@@ -23,22 +27,12 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
 
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        // return $this->redirect($adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl());
+        $meeetingCount = $this->repoMeeting->count([]);
+        $userCount = $this->repoUser->count([]);
 
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirect('...');
-        // }
-
-        // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
         return $this->render('admin/dashboard.html.twig', [
-            'user_count' => '...',
+            'user_count' => $userCount,
+            'meeting_count' => $meeetingCount
         ]);
     }
 
@@ -53,12 +47,11 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::section('Users');
-        yield MenuItem::linkToCrud('Users', 'fa fa-user', User::class);
-        yield MenuItem::section('City');
-        yield MenuItem::linkToCrud('City', 'fa fa-city', City::class);
-        yield MenuItem::section('Campus');
-        yield MenuItem::linkToCrud('Campus', 'fa fa-city', Campus::class);
+        yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);
+        yield MenuItem::linkToCrud('Sorties', 'fa fa-beer', Meeting::class);
+        yield MenuItem::linkToCrud('Villes', 'fa fa-city', City::class);
+        yield MenuItem::linkToCrud('Lieux', 'fa fa-map', Place::class);
+        yield MenuItem::linkToCrud('Campus', 'fa fa-school', Campus::class);
         yield MenuItem::linkToUrl('Retour au site', 'fa fa-home', '/');
 
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);

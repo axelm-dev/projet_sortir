@@ -9,12 +9,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-3 col-6">
-                    <!-- Info box -->
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info"><i class="far fa-user"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Utilisateurs</span>
-                            <span class="info-box-number">{{ user_count }}</span>
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="far fa-user"></i> Utilisateurs : {{ user_count }}</h5>
+                        </div>
+                    </div>
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fa fa-beer"></i> Nombre de Sorties : {{ meeting_count }}</h5>
                         </div>
                     </div>
                 </div>
