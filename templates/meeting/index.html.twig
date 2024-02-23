@@ -34,7 +34,7 @@
                             <td>
                                 <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}">Afficher</a>
 
-                                {% if meeting.state.value != 'Annulée' and meeting.organizer.id == app.user.id %}
+                                {% if meeting.state.value != 'Annulée' and meeting.organizer== app.user %}
                                     <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}">Modifier</a>
 
                                     {% if meeting.state.value == 'Créée' %}
@@ -47,7 +47,7 @@
 
                                 {% endif %}
 
-                                {% if meeting.organizer.id != app.user.id %}
+                                {% if meeting.organizer != app.user %}
                                     <a href="">S'inscrire</a>
                                     <a href="">Se désister</a>
                                 {% endif %}
