@@ -42,6 +42,7 @@ class MeetingController extends AbstractController
 
         foreach($meetings as $key => $meeting) {
             $state = $meeting->getState();
+            $meeting->setNbUser(count($meeting->getParticipants()));
             $endDate = clone $meeting->getDate();
             $endDate->modify('+' . $meeting->getDuration() . 'minute');
 
