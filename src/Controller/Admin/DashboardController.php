@@ -6,6 +6,7 @@ use App\Entity\Campus;
 use App\Entity\City;
 use App\Entity\Meeting;
 use App\Entity\Place;
+use App\Entity\StateMeeting;
 use App\Entity\User;
 use App\Repository\MeetingRepository;
 use App\Repository\UserRepository;
@@ -49,11 +50,11 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);
         yield MenuItem::linkToCrud('Sorties', 'fa fa-beer', Meeting::class);
+        yield MenuItem::linkToCrud('Etats de Sorties', 'fa fa-list', StateMeeting::class);
         yield MenuItem::linkToCrud('Villes', 'fa fa-city', City::class);
         yield MenuItem::linkToCrud('Lieux', 'fa fa-map', Place::class);
         yield MenuItem::linkToCrud('Campus', 'fa fa-school', Campus::class);
         yield MenuItem::linkToUrl('Retour au site', 'fa fa-home', '/');
 
-        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
 }

@@ -60,4 +60,66 @@ class MeetingRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findMeetingByFilter(mixed $data, $userId)
+    {
+
+        $query = $this->createQueryBuilder('m')
+            ->join('m.campus', 'c')
+            ->join('m.state', 's')
+            ->join('m.participants', 'p');
+
+        if (!empty($data['campus'])) {
+            $query->andWhere('c.id = :campus')
+                ->setParameter('campus', $data['campus']);
+        }
+
+        if (!empty($data['search'])) {
+            $query->andWhere('m.name LIKE :search')
+                ->setParameter('search', '%'.$data['search'].'%');
+        }
+
+        if (!empty($data['start_date']) && empty($data['end_date'])) {
+            $format_date_start = date_format($data['start_date'], 'Y-m-d H:i:s');
+            $query->andWhere('m.date >= :start_date')
+                ->setParameter('start_date', $format_date_start);
+        }
+
+        if (!empty($data['end_date']) && empty($data['start_date'])) {
+            $format_date_end = date_format($data['end_date'], 'Y-m-d H:i:s');
+            $query->andWhere('m.date <= :end_date')
+                ->setParameter('end_date', $format_date_end);
+        }
+
+        if(!empty($data['start_date']) && !empty($data['end_date'])) {
+            $format_date_start = date_format($data['start_date'], 'Y-m-d H:i:s');
+            $format_date_end = date_format($data['end_date'], 'Y-m-d H:i:s');
+            $query->andWhere('m.date BETWEEN :start_date AND :end_date')
+                ->setParameter('start_date', $format_date_start)
+                ->setParameter('end_date', $format_date_end);
+        }
+
+        if(!empty($data['organisateur'])) {
+            $query->andWhere('m.organizer = :organisateur')
+                ->setParameter('organisateur', $userId);
+        }
+
+        if(!empty($data['inscrit'])) {
+            $query
+                ->andWhere('p.id IN (:inscrit)')
+                ->setParameter('inscrit', $userId);
+        }
+
+        if(!empty($data['non_inscrit'])) {
+            $query
+                ->andWhere('p.id NOT IN(:non_inscrit)')
+                ->setParameter('non_inscrit', $userId);
+        }
+
+        if (!empty($data['state'])) {
+            $query->andWhere('s.value = :state')
+                ->setParameter('state', 'Passée');
+        }
+
+        return $query->getQuery()->getResult();
+    }
 }

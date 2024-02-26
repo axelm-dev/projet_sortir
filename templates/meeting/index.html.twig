@@ -6,6 +6,25 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <h1 class="text-center mb-4">LES SORTIES</h1>
+            {{ form_start(meetingFilterForm) }}
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(meetingFilterForm.campus) }}
+                        {{ form_row(meetingFilterForm.search) }}
+                        <div class="form-group">
+                            {{ form_row(meetingFilterForm.start_date) }}
+                            {{ form_row(meetingFilterForm.end_date) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(meetingFilterForm.organisateur) }}
+                        {{ form_row(meetingFilterForm.inscrit) }}
+                        {{ form_row(meetingFilterForm.non_inscrit) }}
+                        {{ form_row(meetingFilterForm.state) }}
+                        {{ form_row(meetingFilterForm.rechercher) }}
+                    </div>
+                </div>
+            {{ form_end(meetingFilterForm) }}
 
             <div class="table-responsive">
                 <table class="custom-table">

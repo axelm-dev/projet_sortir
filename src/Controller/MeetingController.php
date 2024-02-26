@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Meeting;
 use App\Entity\User;
 use App\Form\MeetingCancelType;
+use App\Form\MeetingFilterType;
 use App\Form\MeetingType;
 use App\Form\SignMeetingType;
 use App\Repository\MeetingRepository;
@@ -23,7 +24,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class MeetingController extends AbstractController
 {
     #[Route('/', name: 'app_meeting_index', methods: ['GET', 'POST'])]
-    public function index(EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, StateMeetingRepository $stateMeetingRepository): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, StateMeetingRepository $stateMeetingRepository): Response
     {
         /**
          * @var User $user
@@ -31,6 +32,14 @@ class MeetingController extends AbstractController
         $user = $this->getUser();
         $meetings = $meetingRepository->findAllOrderByDate();
 
+        $formFilter = $this->createForm(MeetingFilterType::class);
+        $formFilter->handleRequest($request);
+        $userId = $this->getUser()->getId();
+
+        if($formFilter->isSubmitted() && $formFilter->isValid()) {
+            $data = $formFilter->getData();
+            $meetings = $meetingRepository->findMeetingByFilter($data, $userId);
+        }
 
         foreach($meetings as $key => $meeting) {
             $state = $meeting->getState();
@@ -39,6 +48,7 @@ class MeetingController extends AbstractController
 
             if(($state->getValue() !== "Créée") && ($state->getValue() !== "Annulée")) {
                 $dateNow = new \DateTime('now');
+
 
                 if ($dateNow <= $meeting->getLimitDate()) {
                     $state = $stateMeetingRepository->findOneBy(['value'=>'Ouverte']);
@@ -61,6 +71,7 @@ class MeetingController extends AbstractController
 
         return $this->render('meeting/index.html.twig', [
             'meetings' => $meetings,
+            'meetingFilterForm' => $formFilter->createView(),
         ]);
     }
 
