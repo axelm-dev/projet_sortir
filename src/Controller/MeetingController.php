@@ -23,6 +23,7 @@ class MeetingController extends AbstractController
     #[Route('/', name: 'app_meeting_index', methods: ['GET', 'POST'])]
     public function index(Request $request, EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, StateMeetingRepository $stateMeetingRepository): Response
     {
+
         $meetings = $meetingRepository->findAll();
 
         $formFilter = $this->createForm(MeetingFilterType::class);
@@ -154,6 +155,6 @@ class MeetingController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_meeting_index', ['test' => 'pouette'], Response::HTTP_SEE_OTHER);
     }
 }

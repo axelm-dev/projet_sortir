@@ -6,6 +6,7 @@ use App\Entity\Campus;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -25,13 +26,13 @@ class MeetingFilterType extends AbstractType
             ->add('search', TextType::class, [
                 'required' => false,
             ])
-            ->add('start_date', DateType::class, [
+            ->add('start_date', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => 'Entre',
                 'attr' => ['class' => 'form-control'],
                 'required' => false,
             ])
-            ->add('end_date', DateType::class, [
+            ->add('end_date', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => 'et',
                 'attr' => ['class' => 'form-control'],

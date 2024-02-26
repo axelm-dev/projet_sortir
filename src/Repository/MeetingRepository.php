@@ -63,14 +63,24 @@ class MeetingRepository extends ServiceEntityRepository
                 ->setParameter('search', '%'.$data['search'].'%');
         }
 
-        if (!empty($data['start_date'])) {
+        if (!empty($data['start_date']) && empty($data['end_date'])) {
+            $format_date_start = date_format($data['start_date'], 'Y-m-d H:i:s');
             $query->andWhere('m.date >= :start_date')
-                ->setParameter('start_date', $data['start_date']);
+                ->setParameter('start_date', $format_date_start);
         }
 
-        if (!empty($data['end_date'])) {
+        if (!empty($data['end_date']) && empty($data['start_date'])) {
+            $format_date_end = date_format($data['end_date'], 'Y-m-d H:i:s');
             $query->andWhere('m.date <= :end_date')
-                ->setParameter('end_date', $data['end_date']);
+                ->setParameter('end_date', $format_date_end);
+        }
+
+        if(!empty($data['start_date']) && !empty($data['end_date'])) {
+            $format_date_start = date_format($data['start_date'], 'Y-m-d H:i:s');
+            $format_date_end = date_format($data['end_date'], 'Y-m-d H:i:s');
+            $query->andWhere('m.date BETWEEN :start_date AND :end_date')
+                ->setParameter('start_date', $format_date_start)
+                ->setParameter('end_date', $format_date_end);
         }
 
         if(!empty($data['organisateur'])) {
@@ -80,13 +90,13 @@ class MeetingRepository extends ServiceEntityRepository
 
         if(!empty($data['inscrit'])) {
             $query
-                ->andWhere('p.id = :inscrit')
+                ->andWhere('p.id IN (:inscrit)')
                 ->setParameter('inscrit', $userId);
         }
 
         if(!empty($data['non_inscrit'])) {
             $query
-                ->andWhere('p.id != :non_inscrit')
+                ->andWhere('p.id NOT IN(:non_inscrit)')
                 ->setParameter('non_inscrit', $userId);
         }
 
