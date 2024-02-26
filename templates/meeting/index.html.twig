@@ -67,11 +67,15 @@
                                 {% endif %}
 
                                 {% if meeting.organizer != app.user and meeting.participants != app.user and meeting.state.value == 'Ouverte' %}
-{#                                    {% if app.user.getMeetingParticipation().get(meeting.getId()) is null %}#}
-                                        <a href="{{ path('app_meeting_sign',  {'id': meeting.id}) }}">S'inscrire</a>
-{#                                    {% endif %}#}
-                                    <a href="{{ path('app_meeting_unsign',  {'id': meeting.id}) }}">Se désister</a>
+
+                                        {% if meeting.participants.contains(app.user) %}
+                                             <a href="{{ path('app_meeting_unsign',  {'id': meeting.id}) }}">Se désister</a>
+                                        {% else %}
+                                            <a href="{{ path('app_meeting_sign',  {'id': meeting.id}) }}"> S'inscrire  <a>
+                                        {% endif %}
+
                                 {% endif %}
+
                             </td>
                         </tr>
                     {% else %}
