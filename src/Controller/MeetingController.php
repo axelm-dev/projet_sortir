@@ -9,7 +9,9 @@ use App\Form\MeetingType;
 use App\Form\SignMeetingType;
 use App\Repository\MeetingRepository;
 use App\Repository\StateMeetingRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use mysql_xdevapi\CollectionFind;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -137,20 +139,36 @@ class MeetingController extends AbstractController
         ]);
     }
     #[Route('/{id}/sign', name: 'app_meeting_sign', methods: ['GET', 'POST'])]
-    public function sign(Request $request, User $user, Meeting $meeting, EntityManagerInterface $entityManager, MeetingRepository $meetingRepository): Response
+    public function sign(Request $request, Meeting $meeting, EntityManagerInterface $entityManager,UserRepository $userRepository, MeetingRepository $meetingRepository): Response
     {
-//        if ($meeting->getParticipants())
-        $user->addMeetingParticipation($meeting);
-        $meeting->setNbUser($meeting->getNbUser() + 1);
-        $entityManager->flush();
-        $this->addFlash('success', 'Vous participez !');
+//        if ($meeting->getParticipants()){
+//            dd($user->getMeetingParticipation());
+//            dd($meetingRepository->findBy(['id'=>$meeting]));
+//        }
+
+//        $user->addMeetingParticipation($meeting);
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+        if($user->getMeetingParticipation()->get($meeting->getId()) == null){
+            $meeting->addParticipant($user);
+            $meeting->setNbUser(count($meeting->getParticipants()));
+            $entityManager->flush();
+            $this->addFlash('success', 'Vous participez !');
+        }
+
         return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
     }
     #[Route('/{id}/unsign', name: 'app_meeting_unsign', methods: ['GET', 'POST'])]
-    public function unsign(Request $request, User $user, Meeting $meeting, EntityManagerInterface $entityManager): Response
+    public function unsign(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
-        $user->addMeetingParticipation($meeting);
-        $meeting->setNbUser($meeting->getNbUser()-1);
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+        $meeting->removeParticipant($user);
+        $meeting->setNbUser(count($meeting->getParticipants()));
         $entityManager->flush();
         $this->addFlash('success', 'Vous participez !');
 //        dd($meeting->getParticipants());
