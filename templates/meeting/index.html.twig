@@ -34,20 +34,20 @@
                             <td>
                                 <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}">Afficher</a>
 
-                                {% if meeting.state.value != 'Annulée' and meeting.organizer== app.user %}
+                                {% if meeting.state.value != 'Annulée' and meeting.organizer == app.user %}
                                     <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}">Modifier</a>
 
                                     {% if meeting.state.value == 'Créée' %}
                                         <a href="{{ path('app_meeting_publish', {'id': meeting.id}) }}">Publier</a>
                                     {% endif %}
 
-                                    {% if "now"|date("Y-m-d") < meeting.limitDate|date('Y-m-d') %}
+                                    {% if "now"|date("d-m-Y") < meeting.limitDate|date('d-m-Y') %}
                                          <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}">Annuler</a>
                                     {% endif %}
 
                                 {% endif %}
 
-                                {% if meeting.organizer != app.user and meeting.participants != app.user %}
+                                {% if meeting.organizer != app.user and meeting.participants != app.user and meeting.state.value == 'Ouverte' %}
 {#                                    {% if app.user.getMeetingParticipation().get(meeting.getId()) is null %}#}
                                         <a href="{{ path('app_meeting_sign',  {'id': meeting.id}) }}">S'inscrire</a>
 {#                                    {% endif %}#}

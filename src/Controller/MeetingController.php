@@ -25,10 +25,14 @@ class MeetingController extends AbstractController
     #[Route('/', name: 'app_meeting_index', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, StateMeetingRepository $stateMeetingRepository): Response
     {
-        $meetings = $meetingRepository->findAll();
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+        $meetings = $meetingRepository->findAllOrderByDate();
 
 
-        foreach($meetings as $meeting) {
+        foreach($meetings as $key => $meeting) {
             $state = $meeting->getState();
             $endDate = clone $meeting->getDate();
             $endDate->modify('+' . $meeting->getDuration() . 'minute');
@@ -36,19 +40,22 @@ class MeetingController extends AbstractController
             if(($state->getValue() !== "Créée") && ($state->getValue() !== "Annulée")) {
                 $dateNow = new \DateTime('now');
 
-
                 if ($dateNow <= $meeting->getLimitDate()) {
                     $state = $stateMeetingRepository->findOneBy(['value'=>'Ouverte']);
                 } elseif ($dateNow >= $meeting->getDate() && $dateNow <= $endDate) {
                     $state = $stateMeetingRepository->findOneBy(['value'=>'Activité en cours']);
-                } elseif ($dateNow > $endDate) {
+                } elseif ($dateNow > $endDate && $dateNow < $endDate->modify('+ 1 month')) {
                     $state = $stateMeetingRepository->findOneBy(['value'=>'Passée']);
+                } elseif ($dateNow > $endDate->modify('+ 1 month')) {
+                    $state = $stateMeetingRepository->findOneBy(['value'=>'Archivée']);
                 } else {
                     $state = $stateMeetingRepository->findOneBy(['value'=>'Clôturée']);
                 }
 
                 $meeting->setState($state);
                 $entityManager->flush();
+            } elseif (($state->getValue() === "Créée") && ($user !== $meeting->getOrganizer())) {
+                unset($meetings[$key]);
             }
         }
 

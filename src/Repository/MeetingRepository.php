@@ -21,6 +21,21 @@ class MeetingRepository extends ServiceEntityRepository
         parent::__construct($registry, Meeting::class);
     }
 
+    /**
+     * @return Meeting[]|null
+     */
+    public function findAllOrderByDate(): ?array
+    {
+        return $this->createQueryBuilder('m')
+            ->join('m.state', 's')
+            ->join('m.organizer', 'o')
+            ->andWhere('s.value != :archivingState')
+            ->setParameter('archivingState', 'Archivée')
+            ->orderBy('m.date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Meeting[] Returns an array of Meeting objects
 //     */
