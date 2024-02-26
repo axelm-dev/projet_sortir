@@ -20,6 +20,12 @@
                         </div>
                     </div>
                 </div>
+                <hr>
+                <h2>Upload d'utilisateurs par fichier csv (email,login,password,role,campus)</h2>
+                <form action="{{ path('admin_upload_csv') }}" method="post" enctype="multipart/form-data">
+                    <input type="file" name="csv_file">
+                    <button type="submit">Importer</button>
+                </form>
                 <!-- Ajoutez d'autres boîtes d'informations pour d'autres entités -->
             </div>
             <!-- /.row -->
