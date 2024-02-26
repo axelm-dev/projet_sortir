@@ -28,8 +28,8 @@
 
     {{ form_start(meetingCancelForm) }}
         {{ form_row(meetingCancelForm.annulation_reason) }}
-        <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}" class="btn-custom">Enregistrer</a>
-        <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}" class="btn-custom">Annuler</a>
+        <button type="submit" class="btn btn-custom">Enregistrer la raison</button>
+        <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}" class="btn btn-custom">Annuler</a>
     {{  form_end(meetingCancelForm) }}
 
 {% endblock %}
