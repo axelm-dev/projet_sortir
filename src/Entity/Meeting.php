@@ -56,8 +56,7 @@ class Meeting
     #[ORM\JoinColumn(nullable: false)]
     private ?User $organizer = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $nb_user = null;
+    private ?int $nb_user = 0;
 
     public function __construct()
     {
