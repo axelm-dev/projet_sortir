@@ -24,6 +24,7 @@ class MeetingFilterType extends AbstractType
                 'required' => false,
             ])
             ->add('search', TextType::class, [
+                'label' => 'Recherche',
                 'required' => false,
             ])
             ->add('start_date', DateTimeType::class, [
@@ -40,21 +41,23 @@ class MeetingFilterType extends AbstractType
             ])
             ->add('organisateur', CheckboxType::class, [
                 'required' => false,
-                'label' => "Sorties auxquelles je suis l'organisateur",
+                'label' => "Sorties que j'organise",
             ])
             ->add('inscrit', CheckboxType::class, [
                 'required' => false,
-                'label' => "Sorties auxquelles je suis inscrit",
+                'label' => "Sorties auxquelles je suis inscrit.e",
             ])
             ->add('non_inscrit', CheckboxType::class, [
                 'required' => false,
-                'label' => "Sorties auxquelles je ne suis pas inscrit",
+                'label' => "Sorties auxquelles je ne suis pas inscrit.e",
             ])
             ->add('state', CheckboxType::class, [
                 'required' => false,
-                'label' => "Sorties qui sont passé",
+                'label' => "Sorties qui sont passées",
             ])
-            ->add('rechercher', SubmitType::class);
+            ->add('rechercher', SubmitType::class, [
+                'label' => 'Rechercher'
+            ]);
     }
 
 }

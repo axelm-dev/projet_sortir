@@ -34,6 +34,7 @@ class MeetingController extends AbstractController
         $formFilter = $this->createForm(MeetingFilterType::class);
         $formFilter->handleRequest($request);
         $userId = $this->getUser()->getId();
+        $dateNow = new \DateTime('now');
 
         if($formFilter->isSubmitted() && $formFilter->isValid()) {
             $data = $formFilter->getData();
@@ -47,18 +48,24 @@ class MeetingController extends AbstractController
             $endDate->modify('+' . $meeting->getDuration() . 'minute');
 
             if(($state->getValue() !== "Créée") && ($state->getValue() !== "Annulée")) {
-                $dateNow = new \DateTime('now');
+                $isTodayBeforeLimitDate = $dateNow <= $meeting->getLimitDate();
+                $isTodayAfterLimitDate = $dateNow > $meeting->getLimitDate();
+                $isTodayBeforeMeeting = $dateNow < $meeting->getDate();
+                $isTodayAfterMeeting = $dateNow > $endDate;
+                $isTodayOneMonthAfterMeeting = $dateNow > (clone $endDate)->modify('+ 1 month');
 
+                $isMeetingStarted = $dateNow >= $meeting->getDate();
+                $isNotFinished = $dateNow <= $endDate;
 
-                if ($dateNow <= $meeting->getLimitDate()) {
+                if ($isTodayBeforeLimitDate && ($meeting->getNbUser() < $meeting->getUsersMax())) {
                     $state = $stateMeetingRepository->findOneBy(['value'=>'Ouverte']);
-                } elseif ($dateNow >= $meeting->getDate() && $dateNow <= $endDate) {
+                } elseif ($isMeetingStarted && $isNotFinished) {
                     $state = $stateMeetingRepository->findOneBy(['value'=>'Activité en cours']);
-                } elseif ($dateNow > $endDate && $dateNow < $endDate->modify('+ 1 month')) {
+                } elseif ($isTodayAfterMeeting && !$isTodayOneMonthAfterMeeting) {
                     $state = $stateMeetingRepository->findOneBy(['value'=>'Passée']);
-                } elseif ($dateNow > $endDate->modify('+ 1 month')) {
-                    $state = $stateMeetingRepository->findOneBy(['value'=>'Archivée']);
-                } else {
+                } elseif ($isTodayOneMonthAfterMeeting) {
+                    $state = $stateMeetingRepository->findOneBy(['value' => 'Archivée']);
+                } elseif (($meeting->getNbUser() == $meeting->getUsersMax()) || ($isTodayAfterLimitDate && $isTodayBeforeMeeting) ) {
                     $state = $stateMeetingRepository->findOneBy(['value'=>'Clôturée']);
                 }
 
@@ -72,6 +79,7 @@ class MeetingController extends AbstractController
         return $this->render('meeting/index.html.twig', [
             'meetings' => $meetings,
             'meetingFilterForm' => $formFilter->createView(),
+            'dateToday' => $dateNow,
         ]);
     }
 
