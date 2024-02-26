@@ -46,10 +46,16 @@ final class MeetingFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
-        $limitDate = self::faker()->dateTimeBetween('-4month', '+6month');
+        $oldDate = self::faker()->dateTimeBetween('-12month', 'now');
+        $futureDate = self::faker()->dateTimeBetween('now', '+6month');
+        /** @var \DateTime $limitDate */
+        $limitDate = self::faker()->optional(0.7, $oldDate)->passthrough($futureDate);
+        $startingDate = clone $limitDate;
+        $startingDate->modify('+' . self::faker()->numberBetween(0,3) . ' month');
+
         $usersMax = self::faker()->randomNumber(2);
         return [
-            'date' => self::faker()->dateTimeBetween($limitDate, '+8month'),
+            'date' => $startingDate,
             'duration' => self::faker()->randomNumber(3),
             'limitDate' => $limitDate,
             'name' => self::faker()->words(2, true),
