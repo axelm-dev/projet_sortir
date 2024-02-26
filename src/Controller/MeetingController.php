@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Meeting;
 use App\Entity\User;
 use App\Form\MeetingCancelType;
+use App\Form\MeetingFilterType;
 use App\Form\MeetingType;
 use App\Repository\MeetingRepository;
 use App\Repository\StateMeetingRepository;
@@ -20,10 +21,18 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class MeetingController extends AbstractController
 {
     #[Route('/', name: 'app_meeting_index', methods: ['GET', 'POST'])]
-    public function index(EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, StateMeetingRepository $stateMeetingRepository): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, StateMeetingRepository $stateMeetingRepository): Response
     {
         $meetings = $meetingRepository->findAll();
 
+        $formFilter = $this->createForm(MeetingFilterType::class);
+        $formFilter->handleRequest($request);
+        $userId = $this->getUser()->getId();
+
+        if($formFilter->isSubmitted() && $formFilter->isValid()) {
+            $data = $formFilter->getData();
+            $meetings = $meetingRepository->findMeetingByFilter($data, $userId);
+        }
 
         foreach($meetings as $meeting) {
             $state = $meeting->getState();
@@ -53,6 +62,7 @@ class MeetingController extends AbstractController
 
         return $this->render('meeting/index.html.twig', [
             'meetings' => $meetings,
+            'meetingFilterForm' => $formFilter->createView(),
         ]);
     }
 
