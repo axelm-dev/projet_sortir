@@ -4,59 +4,82 @@
 
 {% block body %}
     <h1>Meeting</h1>
+    <div class="row">
+        <div class="col-8">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Nom de la sortie</th>
+                    <td>{{ meeting.name }}</td>
+                </tr>
+                <tr>
+                    <th>Organisateur</th>
+                    <td>{{ meeting.organizer.login }}</td>
+                </tr>
+                <tr>
+                    <th>Campus</th>
+                    <td>{{ meeting.campus.name }}</td>
+                </tr>
+                <tr>
+                    <th>Lieu</th>
+                    <td>{{ meeting.place.name }}</td>
+                </tr>
+                <tr>
+                    <th>Ville</th>
+                    <td>{{ meeting.place.city.name }}</td>
+                </tr>
+                <tr>
+                    <th>Durée</th>
+                    <td>{{ meeting.duration }}h</td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td>{{ meeting.date ? meeting.date|date('Y-m-d H:i') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Nombre de participants maximum</th>
+                    <td>{{ meeting.usersMax }}</td>
+                </tr>
+                <tr>
+                    <th>Participants inscrits</th>
+                    <td>{{ meeting.nbUser }}</td>
+                </tr>
+                <tr>
+                    <th>Sortie</th>
+                    <td>{{ meeting.state.value }}</td>
+                </tr>
+                <tr>
+                    <th>Information</th>
+                    <td>{{ meeting.textNote }}</td>
+                </tr>
+                <tr>
+                    <th>Date limite d'inscription</th>
+                    <td>{{ meeting.limitDate ? meeting.limitDate|date('Y-m-d') : '' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-4">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Participants</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in meeting.participants %}
+                        <tr>
+                            <td>{{ user.login }}</td>
+                            <td>
+                                <a href="{{ path('app_profile_user', {'id': user.id, 'sortie': meeting.id}) }}" class="btn btn-custom">Voir</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Nom de la sortie</th>
-                <td>{{ meeting.name }}</td>
-            </tr>
-            <tr>
-                <th>Organisateur</th>
-                <td>{{ meeting.organizer.login }}</td>
-            </tr>
-             <tr>
-                <th>Campus</th>
-                <td>{{ meeting.campus.name }}</td>
-            </tr>
-            <tr>
-                <th>Lieu</th>
-                <td>{{ meeting.place.name }}</td>
-            </tr>
-            <tr>
-                <th>Ville</th>
-                <td>{{ meeting.place.city.name }}</td>
-            </tr>
-            <tr>
-                <th>Durée</th>
-                <td>{{ meeting.duration }}h</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>{{ meeting.date ? meeting.date|date('Y-m-d H:i') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Nombre de participants maximum</th>
-                <td>{{ meeting.usersMax }}</td>
-            </tr>
-            <tr>
-                <th>Participants inscrits</th>
-                <td>{{ meeting.nbUser }}</td>
-            </tr>
-            <tr>
-                <th>Sortie</th>
-                <td>{{ meeting.state.value }}</td>
-            </tr>
-            <tr>
-                <th>Information</th>
-                <td>{{ meeting.textNote }}</td>
-            </tr>
-            <tr>
-                <th>Date limite d'inscription</th>
-                <td>{{ meeting.limitDate ? meeting.limitDate|date('Y-m-d') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
 
     <a href="{{ path('app_meeting_index') }}" class="btn btn-custom">Retour à la liste</a>
     {% if (meeting.state.value != 'Annulée') and meeting.organizer.id == app.user.id %}

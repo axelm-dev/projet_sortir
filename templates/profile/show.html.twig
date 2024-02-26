@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Profil de {{ user.login }}</h1>
+    <p>Prénom : {{ user.profile.firstName }}</p>
+    <p>Nom : {{ user.profile.lastName }}</p>
+    <p>Email : {{ user.email }}</p>
+    {% if meetingId %}
+        <a href="{{ path('app_meeting_show', {'id': meetingId}) }}">Retour à la sortie</a>
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    Profil de {{ user.login }}
+{% endblock %}
+

@@ -12,7 +12,6 @@ use App\Repository\MeetingRepository;
 use App\Repository\StateMeetingRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use mysql_xdevapi\CollectionFind;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

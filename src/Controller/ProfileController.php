@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Meeting;
 use App\Entity\Profile;
 use App\Entity\User;
 use App\Form\ProfileType;
@@ -41,8 +42,23 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('profile/index.html.twig', [
-            'controller_name' => 'ProfileController',
             'form' => $profileForm->createView(),
+        ]);
+    }
+    #[Route('/profile/{id}', name: 'app_profile_user')]
+    public function profileUser(User $user, Request $request, EntityManagerInterface $em): Response
+    {
+        $meetingId = $request->query->get('sortie');
+        $profile = $user->getProfile();
+
+        if(!$profile){
+            $profile = new Profile();
+            $user->setProfile($profile);
+        }
+
+        return $this->render('profile/show.html.twig', [
+            'user' => $user,
+            'meetingId' => $meetingId,
         ]);
     }
 }
