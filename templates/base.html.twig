@@ -23,7 +23,7 @@
     </main>
     <footer class="row text-center fixed-bottom">
         <p class="py-4">
-            Projet Sortir &copy; {{ "now"|date("Y") }} ✌ - {% if app.user.roles.contains('ROLE_ADMIN') %} <a href="{{ path('admin') }}">Admin</a> {% endif %}
+            Projet Sortir &copy; {{ "now"|date("Y") }} ✌  - {% if app.user.roles|length > 0 %}{% if app.user.roles[0] == "ROLE_ADMIN" %}<a href="{{ path('admin') }}">Admin</a>{% endif %}{% endif %}
         </p>
     </footer>
 </div>
