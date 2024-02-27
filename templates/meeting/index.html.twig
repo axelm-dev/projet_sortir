@@ -53,9 +53,9 @@
                             <td>
                                 <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}">Afficher</a>
 
-                                {% if meeting.state.value != 'Annulée' and meeting.organizer == app.user %}
+                                {% if meeting.state.value != state_canceled and meeting.organizer == app.user %}
 
-                                    {% if meeting.state.value == 'Créée' %}
+                                    {% if meeting.state.value == state_created %}
                                         <a href="{{ path('app_meeting_publish', {'id': meeting.id}) }}">Publier</a>
                                     {% endif %}
 

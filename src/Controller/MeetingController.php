@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
 #[Route('/meeting')]
-class MeetingController extends AbstractController
+class MeetingController extends ProjectController
 {
     #[Route('/', name: 'app_meeting_index', methods: ['GET', 'POST'])]
     public function index(Request $request, EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, StateMeetingRepository $stateMeetingRepository): Response
@@ -47,7 +47,7 @@ class MeetingController extends AbstractController
             $endDate = clone $meeting->getDate();
             $endDate->modify('+' . $meeting->getDuration() . 'minute');
 
-            if(($state->getValue() !== "Créée") && ($state->getValue() !== "Annulée")) {
+            if(($state->getValue() !== self::STATE_MEETING_CREATED) && ($state->getValue() !== self::STATE_MEETING_CANCELED)) {
                 $isTodayBeforeLimitDate = $dateNow <= $meeting->getLimitDate();
                 $isTodayAfterLimitDate = $dateNow > $meeting->getLimitDate();
                 $isTodayBeforeMeeting = $dateNow < $meeting->getDate();
@@ -58,20 +58,20 @@ class MeetingController extends AbstractController
                 $isNotFinished = $dateNow <= $endDate;
 
                 if ($isTodayBeforeLimitDate && ($meeting->getNbUser() < $meeting->getUsersMax())) {
-                    $state = $stateMeetingRepository->findOneBy(['value'=>'Ouverte']);
+                    $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_OPENED]);
                 } elseif ($isMeetingStarted && $isNotFinished) {
-                    $state = $stateMeetingRepository->findOneBy(['value'=>'Activité en cours']);
+                    $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_ACTIVITY]);
                 } elseif ($isTodayAfterMeeting && !$isTodayOneMonthAfterMeeting) {
-                    $state = $stateMeetingRepository->findOneBy(['value'=>'Passée']);
+                    $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_PASSED]);
                 } elseif ($isTodayOneMonthAfterMeeting) {
-                    $state = $stateMeetingRepository->findOneBy(['value' => 'Archivée']);
+                    $state = $stateMeetingRepository->findOneBy(['value' => self::STATE_MEETING_ARCHIVED]);
                 } elseif (($meeting->getNbUser() == $meeting->getUsersMax()) || ($isTodayAfterLimitDate && $isTodayBeforeMeeting) ) {
-                    $state = $stateMeetingRepository->findOneBy(['value'=>'Clôturée']);
+                    $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_ARCHIVED]);
                 }
 
                 $meeting->setState($state);
                 $entityManager->flush();
-            } elseif (($state->getValue() === "Créée") && ($user !== $meeting->getOrganizer())) {
+            } elseif (($state->getValue() === self::STATE_MEETING_CREATED) && ($user !== $meeting->getOrganizer())) {
                 unset($meetings[$key]);
             }
         }
@@ -80,6 +80,13 @@ class MeetingController extends AbstractController
             'meetings' => $meetings,
             'meetingFilterForm' => $formFilter->createView(),
             'dateToday' => $dateNow,
+            'state_created' => self::STATE_MEETING_CREATED,
+            'state_canceled' => self::STATE_MEETING_CANCELED,
+            'state_opened' => self::STATE_MEETING_OPENED,
+            'state_closed' => self::STATE_MEETING_CLOSED,
+            'state_activity' => self::STATE_MEETING_ACTIVITY,
+            'state_passed' => self::STATE_MEETING_PASSED,
+            'state_archived' => self::STATE_MEETING_ARCHIVED,
         ]);
     }
 
@@ -93,7 +100,7 @@ class MeetingController extends AbstractController
         $user = $this->getUser();
         $meeting->setOrganizer($user);
 
-        $state = $stateMeetingRepository->findOneBy(['value'=>'Créée']);
+        $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_CREATED]);
         $form = $this->createForm(MeetingType::class, $meeting);
         $form->handleRequest($request);
 
@@ -116,13 +123,20 @@ class MeetingController extends AbstractController
     {
         return $this->render('meeting/show.html.twig', [
             'meeting' => $meeting,
+            'state_created' => self::STATE_MEETING_CREATED,
+            'state_canceled' => self::STATE_MEETING_CANCELED,
+            'state_opened' => self::STATE_MEETING_OPENED,
+            'state_closed' => self::STATE_MEETING_CLOSED,
+            'state_activity' => self::STATE_MEETING_ACTIVITY,
+            'state_passed' => self::STATE_MEETING_PASSED,
+            'state_archived' => self::STATE_MEETING_ARCHIVED,
         ]);
     }
 
     #[Route('/{id}/publish', name: 'app_meeting_publish', methods: ['GET', 'POST'])]
     public function publish(Meeting $meeting, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
-        $state = $stateMeetingRepository->findOneBy(['value'=>'Ouverte']);
+        $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_OPENED]);
         $meeting->setState($state);
         $entityManager->flush();
         $this->addFlash('success', 'Bravo, votre sortie a été publiée !');
@@ -135,7 +149,7 @@ class MeetingController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
-            $state = $stateMeetingRepository->findOneBy(['value'=>'Annulée']);
+            $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_CANCELED]);
             $meeting->setState($state);
             $entityManager->flush();
             $this->addFlash('success', 'Votre sortie a bien été annulée !');
@@ -167,12 +181,6 @@ class MeetingController extends AbstractController
     #[Route('/{id}/sign', name: 'app_meeting_sign', methods: ['GET', 'POST'])]
     public function sign(Request $request, Meeting $meeting, EntityManagerInterface $entityManager,UserRepository $userRepository, MeetingRepository $meetingRepository): Response
     {
-//        if ($meeting->getParticipants()){
-//            dd($user->getMeetingParticipation());
-//            dd($meetingRepository->findBy(['id'=>$meeting]));
-//        }
-
-//        $user->addMeetingParticipation($meeting);
         /**
          * @var User $user
          */

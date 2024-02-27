@@ -82,7 +82,7 @@
 
 
     <a href="{{ path('app_meeting_index') }}" class="btn btn-custom">Retour à la liste</a>
-    {% if (meeting.state.value != 'Annulée') and meeting.organizer.id == app.user.id %}
+    {% if (meeting.state.value != state_canceled) and meeting.organizer.id == app.user.id %}
         <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}" class="btn btn-custom">Modifier la sortie</a>
         {% if "now"|date("Y-m-d") < meeting.limitDate|date('Y-m-d') %}
             <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}" class="btn btn-custom">Annuler la sortie</a>
