@@ -178,8 +178,8 @@ class MeetingController extends ProjectController
             'meetingForm' => $form,
         ]);
     }
-    #[Route('/{id}/sign', name: 'app_meeting_sign', methods: ['GET', 'POST'])]
-    public function sign(Request $request, Meeting $meeting, EntityManagerInterface $entityManager,UserRepository $userRepository, MeetingRepository $meetingRepository): Response
+    #[Route('/{id}/regiterToMeeting', name: 'app_meeting_regiterToMeeting', methods: ['GET', 'POST'])]
+    public function regiterToMeeting(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
         /**
          * @var User $user
@@ -194,8 +194,8 @@ class MeetingController extends ProjectController
 
         return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
     }
-    #[Route('/{id}/unsign', name: 'app_meeting_unsign', methods: ['GET', 'POST'])]
-    public function unsign(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/unRegiterToMeeting', name: 'app_meeting_unRegiterToMeeting', methods: ['GET', 'POST'])]
+    public function unRegiterToMeeting(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
         /**
          * @var User $user
@@ -204,8 +204,7 @@ class MeetingController extends ProjectController
         $meeting->removeParticipant($user);
         $meeting->setNbUser(count($meeting->getParticipants()));
         $entityManager->flush();
-        $this->addFlash('success', 'Vous participez !');
-//        dd($meeting->getParticipants());
+        $this->addFlash('success', 'Vous ne participez plus !');
         return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
     }
 
