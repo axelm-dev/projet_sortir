@@ -66,7 +66,9 @@ class MeetingRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('m')
             ->join('m.campus', 'c')
             ->join('m.state', 's')
-            ->join('m.participants', 'p');
+            ->join('m.participants', 'p')
+            ->andWhere('s.value != :archivingState')
+            ->setParameter('archivingState', 'Archivée')->orderBy('m.date', 'DESC');
 
         if (!empty($data['campus'])) {
             $query->andWhere('c.id = :campus')
