@@ -11,6 +11,7 @@ use App\Form\SignMeetingType;
 use App\Repository\MeetingRepository;
 use App\Repository\StateMeetingRepository;
 use App\Repository\UserRepository;
+use App\Service\AuthorizationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,9 +23,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/meeting')]
 class MeetingController extends ProjectController
 {
+    private AuthorizationService $authorizationService;
+    public function __construct(AuthorizationService $authorizationService)
+    {
+        $this->authorizationService = $authorizationService;
+    }
+
     #[Route('/', name: 'app_meeting_index', methods: ['GET', 'POST'])]
     public function index(Request $request, EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, StateMeetingRepository $stateMeetingRepository): Response
     {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_VIEW, 'MEETING') === false) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour voir les sorties');
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+        }
         /**
          * @var User $user
          */
@@ -93,6 +104,11 @@ class MeetingController extends ProjectController
     #[Route('/new', name: 'app_meeting_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_NEW) === false) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour créer une sortie');
+            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         $meeting = new Meeting();
         /**
          * @var User $user
@@ -121,6 +137,10 @@ class MeetingController extends ProjectController
     #[Route('/{id}', name: 'app_meeting_show', methods: ['GET'])]
     public function show(Meeting $meeting): Response
     {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_VIEW, $meeting) === false) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour voir cette sortie');
+            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        }
         return $this->render('meeting/show.html.twig', [
             'meeting' => $meeting,
             'state_created' => self::STATE_MEETING_CREATED,
@@ -136,6 +156,11 @@ class MeetingController extends ProjectController
     #[Route('/{id}/publish', name: 'app_meeting_publish', methods: ['GET', 'POST'])]
     public function publish(Meeting $meeting, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_PUBLISH, $meeting) === false) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour publier cette sortie');
+            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_OPENED]);
         $meeting->setState($state);
         $entityManager->flush();
@@ -145,6 +170,10 @@ class MeetingController extends ProjectController
     #[Route('/{id}/cancel', name: 'app_meeting_cancel', methods: ['GET', 'POST'])]
     public function cancel(Request $request, Meeting $meeting, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
+        if($this->authorizationService->hasAccess('CANCEL_MEETING', $meeting) === false) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour annuler cette sortie');
+            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        }
         $form = $this->createForm(MeetingCancelType::class, $meeting);
         $form->handleRequest($request);
 
@@ -164,6 +193,11 @@ class MeetingController extends ProjectController
     #[Route('/{id}/edit', name: 'app_meeting_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
+        if($this->authorizationService->hasAccess('EDIT_MEETING', $meeting) === false) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour modifier cette sortie');
+            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         $form = $this->createForm(MeetingType::class, $meeting);
         $form->handleRequest($request);
 
@@ -181,6 +215,10 @@ class MeetingController extends ProjectController
     #[Route('/{id}/registerToMeeting', name: 'app_meeting_registerToMeeting', methods: ['GET', 'POST'])]
     public function registerToMeeting(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
+        if($this->authorizationService->hasAccess('REGISTER_MEETING', $meeting) === false) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour participer à cette sortie');
+            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        }
         /**
          * @var User $user
          */
@@ -197,6 +235,10 @@ class MeetingController extends ProjectController
     #[Route('/{id}/unRegisterToMeeting', name: 'app_meeting_unRegisterToMeeting', methods: ['GET', 'POST'])]
     public function unRegisterToMeeting(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
+        if($this->authorizationService->hasAccess('UNREGISTER_MEETING', $meeting) === false) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour ne plus participer à cette sortie');
+            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        }
         /**
          * @var User $user
          */
@@ -213,6 +255,11 @@ class MeetingController extends ProjectController
     #[Route('/{id}', name: 'app_meeting_delete', methods: ['POST'])]
     public function delete(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
+        if($this->authorizationService->hasAccess('DELETE_MEETING', $meeting) === false) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour supprimer cette sortie');
+            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         if ($this->isCsrfTokenValid('delete'.$meeting->getId(), $request->request->get('_token'))) {
             $entityManager->remove($meeting);
             $entityManager->flush();
