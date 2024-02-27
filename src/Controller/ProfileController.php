@@ -43,6 +43,7 @@ class ProfileController extends AbstractController
 
         return $this->render('profile/index.html.twig', [
             'form' => $profileForm->createView(),
+            "user" => $user,
         ]);
     }
     #[Route('/profile/{id}', name: 'app_profile_user')]
