@@ -105,13 +105,14 @@ class MeetingRepository extends ServiceEntityRepository
                 ->setParameter('organisateur', $userId);
         }
 
-        if(!empty($data['inscrit'])) {
+        if(!empty($data['inscrit']) && empty($data['non_inscrit'])) {
+            dump('inscrit');
             $query
                 ->andWhere('p.id IN (:inscrit)')
                 ->setParameter('inscrit', $userId);
         }
 
-        if(!empty($data['non_inscrit'])) {
+        if(!empty($data['non_inscrit']) && empty($data['inscrit'])) {
             $query
                 ->andWhere('p.id NOT IN(:non_inscrit)')
                 ->setParameter('non_inscrit', $userId);
