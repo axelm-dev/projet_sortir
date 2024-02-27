@@ -179,7 +179,7 @@ class MeetingController extends ProjectController
         ]);
     }
     #[Route('/{id}/registerToMeeting', name: 'app_meeting_registerToMeeting', methods: ['GET', 'POST'])]
-    public function regiterToMeeting(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
+    public function registerToMeeting(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
         /**
          * @var User $user
@@ -195,7 +195,7 @@ class MeetingController extends ProjectController
         return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
     }
     #[Route('/{id}/unRegisterToMeeting', name: 'app_meeting_unRegisterToMeeting', methods: ['GET', 'POST'])]
-    public function unRegiterToMeeting(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
+    public function unRegisterToMeeting(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
         /**
          * @var User $user
