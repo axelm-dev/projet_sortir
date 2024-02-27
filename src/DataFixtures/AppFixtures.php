@@ -37,6 +37,7 @@ class AppFixtures extends Fixture
         StateMeetingFactory::createOne(['value' => "Activité en cours"]);
         StateMeetingFactory::createOne(['value' => 'Passée']);
         StateMeetingFactory::createOne(['value' => 'Annulée']);
+        StateMeetingFactory::createOne(['value' => 'Archivée']);
 
         MeetingFactory::createMany(50);
 
