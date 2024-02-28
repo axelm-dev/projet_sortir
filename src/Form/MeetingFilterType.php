@@ -21,11 +21,13 @@ class MeetingFilterType extends AbstractType
                 'class' => Campus::class,
                 'choice_label' => 'name',
                 'multiple' => false,
+                'attr' => ['class' => 'form-control'],
                 'required' => false,
             ])
             ->add('search', TextType::class, [
-                'label' => 'Recherche',
+                'label' => 'Nom',
                 'required' => false,
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('start_date', DateTimeType::class, [
                 'widget' => 'single_text',

@@ -4,41 +4,27 @@
 
 {% block body %}
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h1 class="title text-center mb-5">LES SORTIES</h1>
+        <h1 class="title text-center mb-5">LES SORTIES</h1>
+        <div class="filter col-md-4">
             {{ form_start(meetingFilterForm) }}
             <div class="row">
-                <div class="col-md-6">
-                    {{ form_row(meetingFilterForm.campus) }}
-                    {{ form_row(meetingFilterForm.search) }}
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form_row(meetingFilterForm.start_date) }}
-                        {{ form_row(meetingFilterForm.end_date) }}
-                    </div>
-                </div>
+                {{ form_row(meetingFilterForm.create_new) }}
+                {{ form_row(meetingFilterForm.campus) }}
+                {{ form_row(meetingFilterForm.search) }}
+                {{ form_row(meetingFilterForm.start_date) }}
+                {{ form_row(meetingFilterForm.end_date) }}
+
+                {{ form_row(meetingFilterForm.organisateur) }}
+                {{ form_row(meetingFilterForm.inscrit) }}
+                {{ form_row(meetingFilterForm.non_inscrit) }}
+                {{ form_row(meetingFilterForm.state) }}
             </div>
             <div class="row">
-                <div class="col-md-6">
-                    {{ form_row(meetingFilterForm.organisateur) }}
-                    {{ form_row(meetingFilterForm.inscrit) }}
-                </div>
-                <div class="col-md-6">
-                    {{ form_row(meetingFilterForm.non_inscrit) }}
-                    {{ form_row(meetingFilterForm.state) }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
                     {{ form_row(meetingFilterForm.rechercher) }}
-                </div>
-                <div class="col-md-6">
-                    {{ form_row(meetingFilterForm.create_new) }}
-                </div>
             </div>
             {{ form_end(meetingFilterForm) }}
-
+        </div>
+        <div class="col-md-8">
             <div class="table-responsive">
                 <table class="custom-table">
                     <thead class="custom-thead">
@@ -47,8 +33,7 @@
                         <th>Date</th>
                         <th>Clôture</th>
                         <th>Inscriptions</th>
-                        <th>Organisateur</th>
-                        <th>Inscrit</th>
+                        <th>Organisation</th>
                         <th>Sortie</th>
                         <th>Actions</th>
                     </tr>
@@ -61,7 +46,6 @@
                             <td>{{ meeting.limitDate ? meeting.limitDate|date('d-m-Y') : '' }}</td>
                             <td>{{ meeting.nbUser }}/{{ meeting.usersMax }}</td>
                             <td><a href="{{ path('app_profile_user', {'id': meeting.organizer.id, 'sortie': meeting.id}) }}">{{ meeting.organizer.login }}</a></td>
-                            <td></td>
                             <td>{{ meeting.state.value }}</td>
                             <td>
                                 <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}">Afficher</a>
@@ -80,13 +64,13 @@
                                 {% endif %}
 
                                 {% if isButtonsInscriptionDisplayed(meeting) %}
-                                    {% if meeting.participants.contains(app.user) %}
-                                        <a href="{{ path('app_meeting_unRegisterToMeeting',  {'id': meeting.id}) }}">Se désister</a>
-                                    {% else %}
-                                        <a href="{{ path('app_meeting_registerToMeeting',  {'id': meeting.id}) }}"> S'inscrire <a>
-                                    {% endif %}
+                                {% if meeting.participants.contains(app.user) %}
+                                <a href="{{ path('app_meeting_unRegisterToMeeting',  {'id': meeting.id}) }}">Se désister</a>
+                                {% else %}
+                                <a href="{{ path('app_meeting_registerToMeeting',  {'id': meeting.id}) }}"> S'inscrire <a>
+                                        {% endif %}
 
-                                {% endif %}
+                                        {% endif %}
 
                             </td>
                         </tr>
