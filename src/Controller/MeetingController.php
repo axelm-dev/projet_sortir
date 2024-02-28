@@ -32,14 +32,15 @@ class MeetingController extends ProjectController
     #[Route('/', name: 'app_meeting_index', methods: ['GET', 'POST'])]
     public function index(Request $request, EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, StateMeetingRepository $stateMeetingRepository): Response
     {
-        if($this->authorizationService->hasAccess(self::PERM_MEETING_VIEW, 'MEETING') === false) {
-            $this->addFlash('danger', 'Vous n\'avez pas les droits pour voir les sorties');
-            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
-        }
         /**
          * @var User $user
          */
         $user = $this->getUser();
+        if(!$this->authorizationService->hasAccess(self::PERM_MEETING_VIEW)) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour voir les sorties');
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+        }
+
         $meetings = $meetingRepository->findAllOrderByDate();
 
         $formFilter = $this->createForm(MeetingFilterType::class);
