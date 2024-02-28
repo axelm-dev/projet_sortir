@@ -37,7 +37,7 @@ class MeetingController extends ProjectController
          * @var User $user
          */
         $user = $this->getUser();
-        if(!$this->authorizationService->hasAccess(self::PERM_MEETING_VIEW, $user)) {
+        if(!$this->authorizationService->hasAccess(self::PERM_MEETING_VIEW)) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour voir les sorties');
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
         }
@@ -46,11 +46,12 @@ class MeetingController extends ProjectController
 
         $formFilter = $this->createForm(MeetingFilterType::class);
         $formFilter->handleRequest($request);
+        $userId = $this->getUser()->getId();
         $dateNow = new \DateTime('now');
 
         if($formFilter->isSubmitted() && $formFilter->isValid()) {
             $data = $formFilter->getData();
-            $meetings = $meetingRepository->findMeetingByFilter($data, $user->getId());
+            $meetings = $meetingRepository->findMeetingByFilter($data, $userId);
         }
 
         $meetings = $this->getMeetings($meetings, $dateNow, $stateMeetingRepository, $entityManager, $user);
@@ -76,30 +77,51 @@ class MeetingController extends ProjectController
     #[Route('/new', name: 'app_meeting_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_NEW) === false) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour créer une sortie');
+            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        }
+        $meeting = new Meeting();
+
         /**
          * @var User $user
          */
         $user = $this->getUser();
-        if($this->authorizationService->hasAccess(self::PERM_MEETING_NEW, $user) === false) {
-            $this->addFlash('danger', 'Vous n\'avez pas les droits pour créer une sortie');
-            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        $meeting = new Meeting();
-
-
         $meeting->setOrganizer($user);
 
         $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_CREATED]);
         $form = $this->createForm(MeetingType::class, $meeting);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $meeting->setState($state);
-            $entityManager->persist($meeting);
-            $entityManager->flush();
+        if($request->getSession()->get('meeting_form_data') !== null) {
+            dd('retour');
+            /**
+             * @var Meeting $form_data
+             */
+            $form_data = $request->getSession()->get('meeting_form_data');
+            $meeting->setName($form_data->getName());
+            $meeting->setCampus($form_data->getCampus());
+            $meeting->setDuration($form_data->getDuration());
+            $meeting->setDate($form_data->getDate());
+            $meeting->setUsersMax($form_data->getUsersMax());
+            $meeting->setLimitDate($form_data->getLimitDate());
+            $meeting->setTextNote($form_data->getTextNote());
+        }
 
-            return $this->redirectToRoute('app_meeting_show', ['id' =>$meeting->getId()], Response::HTTP_SEE_OTHER);
+        if ($form->isSubmitted()) {
+            if($form->get('add_place')->isClicked()){
+                $request->getSession()->set('meeting_form_data', $form->getData());
+                return $this->redirectToRoute('app_place_new');
+            } elseif ($form->isValid()) {
+                if ($form->get('publish')->isClicked()) {
+                    $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_OPENED]);
+                }
+                $meeting->setState($state);
+                $entityManager->persist($meeting);
+                $entityManager->flush();
+                $request->getSession()->remove('meeting_form_data');
+                return $this->redirectToRoute('app_meeting_show', ['id' =>$meeting->getId()], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->render('meeting/new.html.twig', [
@@ -111,11 +133,7 @@ class MeetingController extends ProjectController
     #[Route('/{id}', name: 'app_meeting_show', methods: ['GET'])]
     public function show(Meeting $meeting): Response
     {
-        /**
-         * @var User $user
-         */
-        $user = $this->getUser();
-        if($this->authorizationService->hasAccess(self::PERM_MEETING_VIEW, $user, $meeting) === false) {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_VIEW, $meeting) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour voir cette sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -134,11 +152,7 @@ class MeetingController extends ProjectController
     #[Route('/{id}/publish', name: 'app_meeting_publish', methods: ['GET', 'POST'])]
     public function publish(Meeting $meeting, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
-        /**
-         * @var User $user
-         */
-        $user = $this->getUser();
-        if($this->authorizationService->hasAccess(self::PERM_MEETING_PUBLISH, $user, $meeting) === false) {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_PUBLISH, $meeting) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour publier cette sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -152,11 +166,7 @@ class MeetingController extends ProjectController
     #[Route('/{id}/cancel', name: 'app_meeting_cancel', methods: ['GET', 'POST'])]
     public function cancel(Request $request, Meeting $meeting, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
-        /**
-         * @var User $user
-         */
-        $user = $this->getUser();
-        if($this->authorizationService->hasAccess(self::PERM_MEETING_CANCEL, $user, $meeting) === false) {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_CANCEL, $meeting) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour annuler cette sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -179,10 +189,6 @@ class MeetingController extends ProjectController
     #[Route('/{id}/edit', name: 'app_meeting_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Meeting $meeting, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
-        /**
-         * @var User $user
-         */
-        $user = $this->getUser();
         if($this->authorizationService->hasAccess(self::PERM_MEETING_EDIT, $meeting) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour modifier cette sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
@@ -209,10 +215,6 @@ class MeetingController extends ProjectController
     #[Route('/{id}/registerToMeeting', name: 'app_meeting_registerToMeeting', methods: ['GET', 'POST'])]
     public function registerToMeeting(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
-        /**
-         * @var User $user
-         */
-        $user = $this->getUser();
         if($this->authorizationService->hasAccess('REGISTER_MEETING', $meeting) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour participer à cette sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
@@ -233,10 +235,6 @@ class MeetingController extends ProjectController
     #[Route('/{id}/unRegisterToMeeting', name: 'app_meeting_unRegisterToMeeting', methods: ['GET', 'POST'])]
     public function unRegisterToMeeting(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
-        /**
-         * @var User $user
-         */
-        $user = $this->getUser();
         if($this->authorizationService->hasAccess('UNREGISTER_MEETING', $meeting) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour ne plus participer à cette sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
@@ -257,10 +255,6 @@ class MeetingController extends ProjectController
     #[Route('/{id}', name: 'app_meeting_delete', methods: ['POST'])]
     public function delete(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
-        /**
-         * @var User $user
-         */
-        $user = $this->getUser();
         if($this->authorizationService->hasAccess(self::PERM_MEETING_DELETE, $meeting) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour supprimer cette sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
@@ -284,7 +278,6 @@ class MeetingController extends ProjectController
      */
     public function getMeetings(mixed $meetings, \DateTime $dateNow, StateMeetingRepository $stateMeetingRepository, EntityManagerInterface $entityManager, ?User $user): mixed
     {
-
         foreach ($meetings as $key => $meeting) {
             $state = $meeting->getState();
             $meeting->setNbUser(count($meeting->getParticipants()));
