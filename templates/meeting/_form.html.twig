@@ -1,25 +1,13 @@
 {{ form_start(meetingForm) }}
-        {% if app.session.has('meeting')  %}
-                {{ form_row(meetingForm.name) }}
-                {{ form_row(meetingForm.campus) }}
-                {{ form_row(meetingForm.place) }}
-                <a href="{{ path('app_place_new') }}" class="btn btn-custom">+</a>
-                {{ form_row(meetingForm.duration) }}
-                {{ form_row(meetingForm.date)}}
-                {{ form_row(meetingForm.usersMax)}}
-                {{ form_row(meetingForm.limitDate)}}
-                {{ form_row(meetingForm.textNote)}}
-        {% else %}
-                {{ form_row(meetingForm.name) }}
-                {{ form_row(meetingForm.campus) }}
-                {{ form_row(meetingForm.place) }}
-                <a href="{{ path('app_place_new') }}" class="btn btn-custom">+</a>
-                {{ form_row(meetingForm.duration) }}
-                {{ form_row(meetingForm.date)}}
-                {{ form_row(meetingForm.usersMax)}}
-                {{ form_row(meetingForm.limitDate)}}
-                {{ form_row(meetingForm.textNote)}}
-        {% endif %}
+        {{ form_row(meetingForm.name) }}
+        {{ form_row(meetingForm.campus) }}
+        {{ form_row(meetingForm.place) }}
+        {{ form_widget(meetingForm.add_place) }}
+        {{ form_row(meetingForm.duration) }}
+        {{ form_row(meetingForm.date)}}
+        {{ form_row(meetingForm.usersMax)}}
+        {{ form_row(meetingForm.limitDate)}}
+        {{ form_row(meetingForm.textNote)}}
 
         {{ form_widget(meetingForm.save) }}
         {{ form_widget(meetingForm.publish) }}

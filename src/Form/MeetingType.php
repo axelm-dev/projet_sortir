@@ -64,6 +64,10 @@ class MeetingType extends AbstractType
                 'attr' => ['class' => 'btn btn-custom'],
                 'label' => 'Publier'
             ])
+            ->add('add_place', SubmitType::class, [
+                'attr' => ['class' => 'btn btn-custom'],
+                'label' => '+'
+            ])
         ;
     }
 

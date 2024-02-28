@@ -81,12 +81,7 @@ class MeetingController extends ProjectController
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour créer une sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
         }
-
         $meeting = new Meeting();
-        $request->getSession()->set('meeting', $meeting);
-        if($request->getSession()->get('meeting') !== null) {
-            $meeting = $request->getSession()->get('meeting_form_data');
-        }
 
         /**
          * @var User $user
@@ -98,29 +93,41 @@ class MeetingController extends ProjectController
         $form = $this->createForm(MeetingType::class, $meeting);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if($request->getSession()->get('meeting_form_data') !== null) {
+            dd('retour');
+            /**
+             * @var Meeting $form_data
+             */
+            $form_data = $request->getSession()->get('meeting_form_data');
+            $meeting->setName($form_data->getName());
+            $meeting->setCampus($form_data->getCampus());
+            $meeting->setDuration($form_data->getDuration());
+            $meeting->setDate($form_data->getDate());
+            $meeting->setUsersMax($form_data->getUsersMax());
+            $meeting->setLimitDate($form_data->getLimitDate());
+            $meeting->setTextNote($form_data->getTextNote());
+        }
+
+        if ($form->isSubmitted()) {
+            if($form->get('add_place')->isClicked()){
+                $request->getSession()->set('meeting_form_data', $form->getData());
+                return $this->redirectToRoute('app_place_new');
+            } elseif ($form->isValid()) {
                 if ($form->get('publish')->isClicked()) {
                     $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_OPENED]);
                 }
                 $meeting->setState($state);
                 $entityManager->persist($meeting);
                 $entityManager->flush();
-                //supprimer le meeting de la session
+                $request->getSession()->remove('meeting_form_data');
                 return $this->redirectToRoute('app_meeting_show', ['id' =>$meeting->getId()], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->render('meeting/new.html.twig', [
             'meeting' => $meeting,
             'meetingForm' => $form->createView(),
         ]);
-    }
-
-    #[Route(name: 'app_meeting_data', methods: ['GET', 'POST'])]
-    public function save_meeting_data(Request $request): Response
-    {
-        //$meeting =
-        //$request->getSession()->set('meeting_form_data', $meeting);
-        return $this->redirectToRoute('app_place_new');
     }
 
     #[Route('/{id}', name: 'app_meeting_show', methods: ['GET'])]
