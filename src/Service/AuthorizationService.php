@@ -17,16 +17,16 @@ class AuthorizationService implements PermAppInterface
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    public function hasAccess($attributes, $object = null): bool
+    public function hasAccess($attributes, $user, $object = null): bool
     {
         return match ($attributes) {
-            'EDIT_USER' => $this->canEditUser($object),
-            'EDIT_MEETING' => $this->canEditMeeting($object),
-            self::PERM_MEETING_VIEW => $this->canViewMeeting($object),
-            self::PERM_MEETING_CANCEL => $this->canCancelMeeting($object),
-            'PUBLISH_MEETING' => $this->canPublishMeeting($object),
-            'NEW_MEETING' => $this->canNewMeeting($object),
-            'DELETE_MEETING' => $this->canDeleteMeeting($object),
+            'EDIT_USER' => $this->canEditUser($user, $object),
+            'EDIT_MEETING' => $this->canEditMeeting($user, $object),
+            self::PERM_MEETING_VIEW => $this->canViewMeeting($user, $object),
+            self::PERM_MEETING_CANCEL => $this->canCancelMeeting($user, $object),
+            'PUBLISH_MEETING' => $this->canPublishMeeting($user,$object),
+            'NEW_MEETING' => $this->canNewMeeting($user, $object),
+            'DELETE_MEETING' => $this->canDeleteMeeting($user, $object),
             default => false,
         };
     }
@@ -66,10 +66,10 @@ class AuthorizationService implements PermAppInterface
        return $this->authorizationChecker->isGranted('ROLE_ADMIN');
     }
 
-    private function canCancelMeeting($meeting): bool
+    private function canCancelMeeting($user, $meeting): bool
     {
-        if (!$this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return false;
+        if($user instanceof AppUser) {
+            return true;
         }
 
         if($meeting->getOrganizer()->getId() === $this->authorizationChecker->getUser()->getId()) {
