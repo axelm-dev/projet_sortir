@@ -45,12 +45,11 @@ class MeetingController extends ProjectController
 
         $formFilter = $this->createForm(MeetingFilterType::class);
         $formFilter->handleRequest($request);
-        $userId = $this->getUser()->getId();
         $dateNow = new \DateTime('now');
 
         if($formFilter->isSubmitted() && $formFilter->isValid()) {
             $data = $formFilter->getData();
-            $meetings = $meetingRepository->findMeetingByFilter($data, $userId);
+            $meetings = $meetingRepository->findMeetingByFilter($data, $user->getId());
         }
 
         $meetings = $this->getMeetings($meetings, $dateNow, $stateMeetingRepository, $entityManager, $user);
