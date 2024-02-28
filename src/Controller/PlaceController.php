@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Place;
+use App\Form\PlaceFilterType;
 use App\Form\PlaceType;
 use App\Repository\PlaceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,11 +17,20 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/place')]
 class PlaceController extends AbstractController
 {
-    #[Route('/', name: 'app_place_index', methods: ['GET'])]
-    public function index(PlaceRepository $placeRepository): Response
+    #[Route('/', name: 'app_place_index', methods: ['GET', 'POST'])]
+    public function index(Request $request, PlaceRepository $placeRepository): Response
     {
+        $places = $placeRepository->findAll();
+        $form = $this->createForm(PlaceFilterType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $places = $placeRepository->findByName($form->getData()['name']);
+        }
+
         return $this->render('place/index.html.twig', [
-            'places' => $placeRepository->findAll(),
+            'form_filter_place' => $form->createView(),
+            'places' => $places,
         ]);
     }
 
