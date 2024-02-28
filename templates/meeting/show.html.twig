@@ -56,6 +56,12 @@
                     <th>Date limite d'inscription</th>
                     <td>{{ meeting.limitDate ? meeting.limitDate|date('Y-m-d') : '' }}</td>
                 </tr>
+                {% if meeting.annulationReason != null %}
+                    <tr>
+                        <th>Raison de l'annulation</th>
+                        <td>{{ meeting.annulationReason }}</td>
+                    </tr>
+                {% endif %}
                 </tbody>
             </table>
         </div>
