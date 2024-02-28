@@ -52,40 +52,7 @@ class MeetingController extends ProjectController
             $meetings = $meetingRepository->findMeetingByFilter($data, $userId);
         }
 
-        foreach($meetings as $key => $meeting) {
-            $state = $meeting->getState();
-            $meeting->setNbUser(count($meeting->getParticipants()));
-            $endDate = clone $meeting->getDate();
-            $endDate->modify('+' . $meeting->getDuration() . 'minute');
-
-            if(($state->getValue() !== self::STATE_MEETING_CREATED) && ($state->getValue() !== self::STATE_MEETING_CANCELED)) {
-                $isTodayBeforeLimitDate = $dateNow <= $meeting->getLimitDate();
-                $isTodayAfterLimitDate = $dateNow > $meeting->getLimitDate();
-                $isTodayBeforeMeeting = $dateNow < $meeting->getDate();
-                $isTodayAfterMeeting = $dateNow > $endDate;
-                $isTodayOneMonthAfterMeeting = $dateNow > (clone $endDate)->modify('+ 1 month');
-
-                $isMeetingStarted = $dateNow >= $meeting->getDate();
-                $isNotFinished = $dateNow <= $endDate;
-
-                if ($isTodayBeforeLimitDate && ($meeting->getNbUser() < $meeting->getUsersMax())) {
-                    $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_OPENED]);
-                } elseif ($isMeetingStarted && $isNotFinished) {
-                    $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_ACTIVITY]);
-                } elseif ($isTodayAfterMeeting && !$isTodayOneMonthAfterMeeting) {
-                    $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_PASSED]);
-                } elseif ($isTodayOneMonthAfterMeeting) {
-                    $state = $stateMeetingRepository->findOneBy(['value' => self::STATE_MEETING_ARCHIVED]);
-                } elseif (($meeting->getNbUser() == $meeting->getUsersMax()) || ($isTodayAfterLimitDate && $isTodayBeforeMeeting) ) {
-                    $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_ARCHIVED]);
-                }
-
-                $meeting->setState($state);
-                $entityManager->flush();
-            } elseif (($state->getValue() === self::STATE_MEETING_CREATED) && ($user !== $meeting->getOrganizer())) {
-                unset($meetings[$key]);
-            }
-        }
+        $meetings = $this->getMeetings($meetings, $dateNow, $stateMeetingRepository, $entityManager, $user);
 
         return $this->render('meeting/index.html.twig', [
             'meetings' => $meetings,
@@ -170,7 +137,7 @@ class MeetingController extends ProjectController
     #[Route('/{id}/cancel', name: 'app_meeting_cancel', methods: ['GET', 'POST'])]
     public function cancel(Request $request, Meeting $meeting, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
-        if($this->authorizationService->hasAccess('CANCEL_MEETING', $meeting) === false) {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_CANCEL, $meeting) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour annuler cette sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -193,7 +160,7 @@ class MeetingController extends ProjectController
     #[Route('/{id}/edit', name: 'app_meeting_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
-        if($this->authorizationService->hasAccess('EDIT_MEETING', $meeting) === false) {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_EDIT, $meeting) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour modifier cette sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -255,7 +222,7 @@ class MeetingController extends ProjectController
     #[Route('/{id}', name: 'app_meeting_delete', methods: ['POST'])]
     public function delete(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
-        if($this->authorizationService->hasAccess('DELETE_MEETING', $meeting) === false) {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_DELETE, $meeting) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour supprimer cette sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -266,5 +233,53 @@ class MeetingController extends ProjectController
         }
 
         return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @param mixed $meetings
+     * @param \DateTime $dateNow
+     * @param StateMeetingRepository $stateMeetingRepository
+     * @param EntityManagerInterface $entityManager
+     * @param User|null $user
+     * @return mixed
+     */
+    public function getMeetings(mixed $meetings, \DateTime $dateNow, StateMeetingRepository $stateMeetingRepository, EntityManagerInterface $entityManager, ?User $user): mixed
+    {
+        foreach ($meetings as $key => $meeting) {
+            $state = $meeting->getState();
+            $meeting->setNbUser(count($meeting->getParticipants()));
+            $endDate = clone $meeting->getDate();
+            $endDate->modify('+' . $meeting->getDuration() . 'minute');
+
+            if (($state->getValue() !== self::STATE_MEETING_CREATED) && ($state->getValue() !== self::STATE_MEETING_CANCELED)) {
+                $isTodayBeforeLimitDate = $dateNow <= $meeting->getLimitDate();
+                $isTodayAfterLimitDate = $dateNow > $meeting->getLimitDate();
+                $isTodayBeforeMeeting = $dateNow < $meeting->getDate();
+                $isTodayAfterMeeting = $dateNow > $endDate;
+                $isTodayOneMonthAfterMeeting = $dateNow > (clone $endDate)->modify('+ 1 month');
+
+                $isMeetingStarted = $dateNow >= $meeting->getDate();
+                $isNotFinished = $dateNow <= $endDate;
+
+                if ($isTodayBeforeLimitDate && ($meeting->getNbUser() < $meeting->getUsersMax())) {
+                    $state = $stateMeetingRepository->findOneBy(['value' => self::STATE_MEETING_OPENED]);
+                } elseif ($isMeetingStarted && $isNotFinished) {
+                    $state = $stateMeetingRepository->findOneBy(['value' => self::STATE_MEETING_ACTIVITY]);
+                } elseif ($isTodayAfterMeeting && !$isTodayOneMonthAfterMeeting) {
+                    $state = $stateMeetingRepository->findOneBy(['value' => self::STATE_MEETING_PASSED]);
+                } elseif ($isTodayOneMonthAfterMeeting) {
+                    $state = $stateMeetingRepository->findOneBy(['value' => self::STATE_MEETING_ARCHIVED]);
+                } elseif (($meeting->getNbUser() == $meeting->getUsersMax()) || ($isTodayAfterLimitDate && $isTodayBeforeMeeting)) {
+                    $state = $stateMeetingRepository->findOneBy(['value' => self::STATE_MEETING_ARCHIVED]);
+                }
+
+                $meeting->setState($state);
+                $entityManager->flush();
+            } elseif (($state->getValue() === self::STATE_MEETING_CREATED) && ($user !== $meeting->getOrganizer())) {
+                unset($meetings[$key]);
+            }
+        }
+        return $meetings;
+
     }
 }
