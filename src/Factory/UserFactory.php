@@ -51,7 +51,7 @@ final class UserFactory extends ModelFactory
             'actif' => true,
             'email' => self::faker()->unique()->email(),
             'login' => self::faker()->unique()->userName(),
-            'campus' => CampusFactory::new(),
+            'campus' => CampusFactory::Random(),
             'profile' => ProfileFactory::createOne(
                 [
                     'firstName' => self::faker()->firstName(),

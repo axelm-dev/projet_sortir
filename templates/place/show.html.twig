@@ -27,8 +27,8 @@
     </table>
 
     <a href="{{ path('app_place_index') }}">back to list</a>
-
-    <a href="{{ path('app_place_edit', {'id': place.id}) }}">edit</a>
-
+    {% if "ROLE_ADMIN" in app.user.roles %}
+        <a href="{{ path('app_place_edit', {'id': place.id}) }}">edit</a>
+    {% endif %}
     {{ include('place/_delete_form.html.twig') }}
 {% endblock %}

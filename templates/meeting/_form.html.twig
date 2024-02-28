@@ -8,8 +8,9 @@
         {{ form_row(meetingForm.limitDate)}}
         {{ form_row(meetingForm.textNote)}}
         <button class="btn btn-custom">{{ button_label|default('Enregistrer') }}</button>
-        <a href="{{ path('app_meeting_publish', {'id': meeting.id}) }}" class="btn btn-custom">Publier la sortie</a>
-
+        {% if meeting is defined and meeting.id is not empty %}
+                <a href="{{ path('app_meeting_publish', {'id': meeting.id}) }}" class="btn btn-custom">Publier la sortie</a>
+        {% endif %}
 {{ form_end(meetingForm) }}
 
 

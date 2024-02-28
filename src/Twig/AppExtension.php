@@ -13,13 +13,20 @@ class AppExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('isButtonDisplayed', [$this, 'isButtonDisplayed']),
+            new TwigFunction('isButtonsInscriptionDisplayed', [$this, 'isButtonsInscriptionDisplayed']),
+            new TwigFunction('isButtonModifyAndCancelDisplayed', [$this, 'isButtonModifyAndCancelDisplayed']),
         ];
     }
 
-    public function isButtonDisplayed(Meeting $meeting): bool
+    public function isButtonsInscriptionDisplayed(Meeting $meeting): bool
     {
         $dateNow = new \DateTime('now');
         return $meeting->getState()->getValue() === 'Ouverte' || ($meeting->getState()->getValue() ===  'Clôturée' && $dateNow < $meeting->getLimitDate());
+    }
+
+    public function isButtonModifyAndCancelDisplayed(Meeting $meeting) : bool
+    {
+        $dateNow = new \DateTime('now');
+        return $dateNow < $meeting->getLimitDate();
     }
 }

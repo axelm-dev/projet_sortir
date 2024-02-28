@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class ProjectController extends AbstractController
+class ProjectController extends AbstractController implements PermAppInterface
 {
 
     public const STATE_MEETING_CREATED = "Créée";
@@ -14,6 +14,7 @@ class ProjectController extends AbstractController
     public const STATE_MEETING_PASSED = "Passée";
     public const STATE_MEETING_ARCHIVED = "Archivée";
     public const STATE_MEETING_CANCELED = "Annulée";
+
 
 
 

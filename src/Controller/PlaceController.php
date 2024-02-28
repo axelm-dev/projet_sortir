@@ -52,6 +52,7 @@ class PlaceController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_place_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Place $place, EntityManagerInterface $entityManager): Response
     {
@@ -70,6 +71,7 @@ class PlaceController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_place_delete', methods: ['POST'])]
     public function delete(Request $request, Place $place, EntityManagerInterface $entityManager): Response
     {

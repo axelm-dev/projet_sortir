@@ -59,36 +59,21 @@
                                         <a href="{{ path('app_meeting_publish', {'id': meeting.id}) }}">Publier</a>
                                     {% endif %}
 
-                                    {% if "now"|date("d-m-Y") < meeting.limitDate|date('d-m-Y') %}
+                                    {% if isButtonModifyAndCancelDisplayed(meeting) %}
                                         <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}">Modifier</a>
                                         <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}">Annuler</a>
                                     {% endif %}
 
                                 {% endif %}
 
-                                {% if meeting.organizer != app.user%}
-                                    {% if isButtonDisplayed(meeting) %}
-                                        {% if meeting.participants.contains(app.user) %}
-                                            <a href="{{ path('app_meeting_unRegisterToMeeting',  {'id': meeting.id}) }}">Se désister</a>
-                                        {% else %}
-                                            <a href="{{ path('app_meeting_registerToMeeting',  {'id': meeting.id}) }}"> S'inscrire <a>
-                                        {% endif %}
-
+                                {% if isButtonsInscriptionDisplayed(meeting) %}
+                                    {% if meeting.participants.contains(app.user) %}
+                                        <a href="{{ path('app_meeting_unRegisterToMeeting',  {'id': meeting.id}) }}">Se désister</a>
+                                    {% else %}
+                                        <a href="{{ path('app_meeting_registerToMeeting',  {'id': meeting.id}) }}"> S'inscrire <a>
                                     {% endif %}
+
                                 {% endif %}
-
-                                {#{% if meeting.participants.contains(app.user) %}
-                                <a href="{{ path('app_meeting_unsign',  {'id': meeting.id}) }}">Se désister</a>
-                                {% else %}
-                                <a href="{{ path('app_meeting_sign',  {'id': meeting.id}) }}"> S'inscrire <a>
-                                        {% endif %}
-
-                                        {% endif %}
-                                 and ((meeting.state.value == 'Ouverte')
-                                        or (((meeting.state.value == 'Clôturée') and ("now"|date("d-m-Y") < meeting.limitDate|date('d-m-Y')))
-                                            and (meeting.participants.contains(app.user))
-                                        )
-                                    ) %}#}
 
                             </td>
                         </tr>

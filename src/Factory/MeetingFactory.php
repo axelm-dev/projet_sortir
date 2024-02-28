@@ -53,15 +53,19 @@ final class MeetingFactory extends ModelFactory
         $startingDate = clone $limitDate;
         $startingDate->modify('+' . self::faker()->numberBetween(0,3) . ' month');
 
+        // generate a state
+        $defaultState = self::faker()->optional(0.7, StateMeetingFactory::find(['value' => 'Créée']))->passthrough(StateMeetingFactory::find(['value' => 'Ouverte']));
+        $state = self::faker()->optional(0.8, StateMeetingFactory::find(['value' => 'Annulée']))->passthrough($defaultState);
+
         $usersMax = self::faker()->randomNumber(2);
         return [
             'date' => $startingDate,
-            'duration' => self::faker()->randomNumber(3),
             'limitDate' => $limitDate,
+            'duration' => self::faker()->randomNumber(3),
             'name' => self::faker()->words(2, true),
             'usersMax' => $usersMax,
             'organizer' => UserFactory::random(),
-            'state' => StateMeetingFactory::random(),
+            'state' => $state,
             'place' => PlaceFactory::random(),
             'campus' => CampusFactory::random(),
             'participants' => UserFactory::randomRange(0,$usersMax > UserFactory::count() ? UserFactory::count() : $usersMax)
