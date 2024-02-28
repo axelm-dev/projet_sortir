@@ -2,11 +2,15 @@
 
 namespace App\Service;
 
+use App\Controller\PermAppInterface;
+use App\Controller\ProjectController;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class AuthorizationService
+class AuthorizationService implements PermAppInterface
 {
     private AuthorizationCheckerInterface $authorizationChecker;
+
+    private ProjectController $projectController;
 
     public function __construct(AuthorizationCheckerInterface $authorizationChecker)
     {
@@ -18,8 +22,8 @@ class AuthorizationService
         return match ($attributes) {
             'EDIT_USER' => $this->canEditUser($object),
             'EDIT_MEETING' => $this->canEditMeeting($object),
-            'VIEW_MEETING' => $this->canViewMeeting($object),
-            'CANCEL_MEETING' => $this->canCancelMeeting($object),
+            self::PERM_MEETING_VIEW => $this->canViewMeeting($object),
+            self::PERM_MEETING_CANCEL => $this->canCancelMeeting($object),
             'PUBLISH_MEETING' => $this->canPublishMeeting($object),
             'NEW_MEETING' => $this->canNewMeeting($object),
             'DELETE_MEETING' => $this->canDeleteMeeting($object),
