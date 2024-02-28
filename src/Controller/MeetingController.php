@@ -38,7 +38,7 @@ class MeetingController extends ProjectController
         $user = $this->getUser();
         if(!$this->authorizationService->hasAccess(self::PERM_MEETING_VIEW)) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour voir les sorties');
-            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
         }
 
         $meetings = $meetingRepository->findAllOrderByDate();
