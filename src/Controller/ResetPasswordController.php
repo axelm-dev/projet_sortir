@@ -38,6 +38,9 @@ class ResetPasswordController extends AbstractController
     #[Route('', name: 'app_forgot_password_request')]
     public function request(Request $request, MailerInterface $mailer, TranslatorInterface $translator): Response
     {
+        if($this->getUser()){
+            return $this->redirectToRoute('app_home');
+        }
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
 
@@ -60,6 +63,9 @@ class ResetPasswordController extends AbstractController
     #[Route('/check-email', name: 'app_check_email')]
     public function checkEmail(): Response
     {
+        if($this->getUser()){
+            return $this->redirectToRoute('app_home');
+        }
         // Generate a fake token if the user does not exist or someone hit this page directly.
         // This prevents exposing whether or not a user was found with the given email address or not
         if (null === ($resetToken = $this->getTokenObjectFromSession())) {
@@ -77,6 +83,9 @@ class ResetPasswordController extends AbstractController
     #[Route('/reset/{token}', name: 'app_reset_password')]
     public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator, string $token = null): Response
     {
+        if($this->getUser()){
+            return $this->redirectToRoute('app_home');
+        }
         if ($token) {
             // We store the token in session and remove it from the URL, to avoid the URL being
             // loaded in a browser and potentially leaking the token to 3rd party JavaScript.
@@ -141,6 +150,9 @@ class ResetPasswordController extends AbstractController
 //            'email' => $emailFormData,
 //        ]));
 
+        if($this->getUser()){
+            return $this->redirectToRoute('app_home');
+        }
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
             'email' => $emailFormData,
         ]);
@@ -150,24 +162,24 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_check_email');
         }
 
-//        try {
+        try {
             $resetToken = $this->resetPasswordHelper->generateResetToken($user);
-//        } catch (ResetPasswordExceptionInterface $e) {
-//            // If you want to tell the user why a reset email was not sent, uncomment
-//            // the lines below and change the redirect to 'app_forgot_password_request'.
-//            // Caution: This may reveal if a user is registered or not.
-//            //
-//            // $this->addFlash('reset_password_error', sprintf(
-//            //     '%s - %s',
-//            //     $translator->trans(ResetPasswordExceptionInterface::MESSAGE_PROBLEM_HANDLE, [], 'ResetPasswordBundle'),
-//            //     $translator->trans($e->getReason(), [], 'ResetPasswordBundle')
-//            // ));
-//
-//            return $this->redirectToRoute('app_check_email');
-//        }
+        } catch (ResetPasswordExceptionInterface $e) {
+            // If you want to tell the user why a reset email was not sent, uncomment
+            // the lines below and change the redirect to 'app_forgot_password_request'.
+            // Caution: This may reveal if a user is registered or not.
+            //
+             $this->addFlash('reset_password_error', sprintf(
+                 '%s - %s',
+                 $translator->trans(ResetPasswordExceptionInterface::MESSAGE_PROBLEM_HANDLE, [], 'ResetPasswordBundle'),
+                 $translator->trans($e->getReason(), [], 'ResetPasswordBundle')
+             ));
+
+            return $this->redirectToRoute('app_check_email');
+        }
 
         $email = (new TemplatedEmail())
-            ->from(new Address('php47392@gmail.com', 'ultron'))
+            ->from('noreplyt@fma.com')
             ->to($user->getEmail())
             ->subject('Your password reset request')
             ->htmlTemplate('reset_password/email.html.twig')
@@ -183,3 +195,5 @@ class ResetPasswordController extends AbstractController
         return $this->redirectToRoute('app_check_email');
     }
 }
+
+
