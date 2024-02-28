@@ -6,11 +6,8 @@
 
     {{ form_errors(form) }}
 
-    {{ form_start(form) }}
-        {{ form_row(form.firstName) }}
-        {{ form_row(form.lastName) }}
-        {{ form_row(form.phone) }}
-        <button type="submit" class="btn btn-primary">Modifier</button>
-    {{ form_end(form) }}
+    {{ form(form) }}
+
+    <a href="{{ path('app_profile_user', {'id': user.id}) }}">Voir</a>
 
 {% endblock %}

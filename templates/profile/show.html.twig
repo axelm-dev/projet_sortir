@@ -1,13 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Profil de {{ user.login }}</h1>
-    <p>Prénom : {{ user.profile.firstName }}</p>
-    <p>Nom : {{ user.profile.lastName }}</p>
-    <p>Email : {{ user.email }}</p>
-    {% if meetingId %}
-        <a href="{{ path('app_meeting_show', {'id': meetingId}) }}">Retour à la sortie</a>
-    {% endif %}
+    <div class="card">
+        <img class="card-img-top" src="{{  vich_uploader_asset(user.profile, 'imageFile') }}" alt="{{ user.profile.image }}">
+        <div class="card-body">
+            <h1>Profil de {{ user.login }}</h1>
+            <p class="card-text" >Prénom : {{ user.profile.firstName }}</p>
+            <p class="card-text">Nom : {{ user.profile.lastName }}</p>
+            <p class="card-text">Email : {{ user.email }}</p>
+
+            {% if meetingId %}
+                <a class="card-link" href="{{ path('app_meeting_show', {'id': meetingId}) }}">Retour à la sortie</a>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
 
 {% block title %}

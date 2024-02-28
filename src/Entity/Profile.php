@@ -4,8 +4,12 @@ namespace App\Entity;
 
 use App\Repository\ProfileRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]
+#[Vich\Uploadable()]
 class Profile
 {
     #[ORM\Id]
@@ -21,6 +25,24 @@ class Profile
 
     #[ORM\Column(length: 15)]
     private ?string $phone = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    #[Vich\UploadableField(mapping: 'profile_images', fileNameProperty: 'image')]
+    #[Assert\Image()]
+    private ?File $imageFile = null;
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile): Profile
+    {
+        $this->imageFile = $imageFile;
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -59,6 +81,18 @@ class Profile
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }
