@@ -15,25 +15,16 @@ class AuthorizationService
 
     public function hasAccess($attributes, $object = null): bool
     {
-        switch ($attributes) {
-            case 'EDIT-USER':
-                return $this->canEditUser($object);
-            case 'EDIT-MEETING':
-                return $this->canEditMeeting($object);
-            case 'VIEW-MEETING':
-                return $this->canViewMeeting($object);
-            case 'CANCEL-MEETING':
-                return $this->canCancelMeeting($object);
-            case 'PUBLISH-MEETING':
-                return $this->canPublishMeeting($object);
-            case 'NEW-MEETING':
-                return $this->canNewMeeting($object);
-            case 'DELETE-MEETING':
-                return $this->canDeleteMeeting($object);
-
-            default:
-                return false;
-        }
+        return match ($attributes) {
+            'EDIT_USER' => $this->canEditUser($object),
+            'EDIT_MEETING' => $this->canEditMeeting($object),
+            'VIEW_MEETING' => $this->canViewMeeting($object),
+            'CANCEL_MEETING' => $this->canCancelMeeting($object),
+            'PUBLISH_MEETING' => $this->canPublishMeeting($object),
+            'NEW_MEETING' => $this->canNewMeeting($object),
+            'DELETE_MEETING' => $this->canDeleteMeeting($object),
+            default => false,
+        };
     }
 
     private function canEditUser($user): bool
@@ -67,9 +58,6 @@ class AuthorizationService
         if (!$this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return false;
         }
-
-
-
 
         return $this->authorizationChecker->isGranted('ROLE_ADMIN');
     }
