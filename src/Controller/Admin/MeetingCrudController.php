@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Meeting;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -14,7 +15,6 @@ class MeetingCrudController extends AbstractCrudController
     {
         return Meeting::class;
     }
-
     /*
     public function configureFields(string $pageName): iterable
     {
