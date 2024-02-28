@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Service;
-
+use App\Entity\User as AppUser;
 use App\Controller\PermAppInterface;
 use App\Controller\ProjectController;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -46,7 +46,7 @@ class AuthorizationService implements PermAppInterface
 
     private function canEditMeeting($meeting): bool
     {
-        if (!$this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY') === false) {
             return false;
         }
 
@@ -57,13 +57,13 @@ class AuthorizationService implements PermAppInterface
         return $this->authorizationChecker->isGranted('ROLE_ADMIN');
     }
 
-    private function canViewMeeting($meeting): bool
+    private function canViewMeeting($user): bool
     {
-        if (!$this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return false;
-        }
+       if($user instanceof AppUser) {
+           return true;
+       }
 
-        return $this->authorizationChecker->isGranted('ROLE_ADMIN');
+       return $this->authorizationChecker->isGranted('ROLE_ADMIN');
     }
 
     private function canCancelMeeting($meeting): bool

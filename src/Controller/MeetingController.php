@@ -36,7 +36,7 @@ class MeetingController extends ProjectController
          * @var User $user
          */
         $user = $this->getUser();
-        if(!$this->authorizationService->hasAccess(self::PERM_MEETING_VIEW)) {
+        if(!$this->authorizationService->hasAccess(self::PERM_MEETING_VIEW, $user)) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour voir les sorties');
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
         }
