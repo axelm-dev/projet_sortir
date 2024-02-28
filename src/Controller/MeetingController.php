@@ -54,6 +54,10 @@ class MeetingController extends ProjectController
 
         $meetings = $this->getMeetings($meetings, $dateNow, $stateMeetingRepository, $entityManager, $user);
 
+        if($formFilter->get('create_new')->isClicked()){
+            return $this->redirectToRoute('app_meeting_new', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('meeting/index.html.twig', [
             'meetings' => $meetings,
             'meetingFilterForm' => $formFilter->createView(),
@@ -172,7 +176,7 @@ class MeetingController extends ProjectController
     }
 
     #[Route('/{id}/edit', name: 'app_meeting_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Meeting $meeting, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
         /**
          * @var User $user
@@ -187,9 +191,13 @@ class MeetingController extends ProjectController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('publish')->isClicked()) {
+                $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_OPENED]);
+                $meeting->setState($state);
+            }
             $entityManager->flush();
 
-            $this->redirectToRoute('app_meeting_show', ['id' =>$meeting->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_meeting_show', ['id' =>$meeting->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('meeting/edit.html.twig', [

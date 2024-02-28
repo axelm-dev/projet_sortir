@@ -5,23 +5,36 @@
 {% block body %}
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h1 class="text-center mb-4">LES SORTIES</h1>
+            <h1 class="title text-center mb-5">LES SORTIES</h1>
             {{ form_start(meetingFilterForm) }}
             <div class="row">
                 <div class="col-md-6">
                     {{ form_row(meetingFilterForm.campus) }}
                     {{ form_row(meetingFilterForm.search) }}
+                </div>
+                <div class="col-md-6">
                     <div class="form-group">
                         {{ form_row(meetingFilterForm.start_date) }}
                         {{ form_row(meetingFilterForm.end_date) }}
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-6">
                     {{ form_row(meetingFilterForm.organisateur) }}
                     {{ form_row(meetingFilterForm.inscrit) }}
+                </div>
+                <div class="col-md-6">
                     {{ form_row(meetingFilterForm.non_inscrit) }}
                     {{ form_row(meetingFilterForm.state) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
                     {{ form_row(meetingFilterForm.rechercher) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(meetingFilterForm.create_new) }}
                 </div>
             </div>
             {{ form_end(meetingFilterForm) }}
@@ -47,7 +60,7 @@
                             <td>{{ meeting.date ? meeting.date|date('d-m-Y H:i') }}</td>
                             <td>{{ meeting.limitDate ? meeting.limitDate|date('d-m-Y') : '' }}</td>
                             <td>{{ meeting.nbUser }}/{{ meeting.usersMax }}</td>
-                            <td>{{ meeting.organizer.login }}</td>
+                            <td><a href="{{ path('app_profile_user', {'id': meeting.organizer.id, 'sortie': meeting.id}) }}">{{ meeting.organizer.login }}</a></td>
                             <td></td>
                             <td>{{ meeting.state.value }}</td>
                             <td>
@@ -84,9 +97,6 @@
                     {% endfor %}
                     </tbody>
                 </table>
-            </div>
-            <div class="text-center mt-4">
-                <a href="{{ path('app_meeting_new') }}" class="btn btn-custom">Créer une sortie</a>
             </div>
         </div>
     </div>

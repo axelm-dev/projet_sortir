@@ -6,7 +6,5 @@
     <h1>Edit Meeting</h1>
 
     {{ include('meeting/_form.html.twig', {'button_label': 'Enregistrer'}) }}
-    <a href="{{ path('app_meeting_delete', {'id': meeting.id}) }}" class="btn-custom">Supprimer la sortie</a>
-    <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}" class="btn-custom">Annuler</a>
 
 {% endblock %}

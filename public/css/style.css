@@ -4,6 +4,7 @@ body {
     font-family: Consolas, serif;
     color: #fff;
     animation: gradient 15s ease infinite;
+    min-height: 97vh;
 }
 
 @keyframes gradient {
@@ -18,11 +19,15 @@ body {
     }
 }
 
+.title {
+    /* Ombre : décalage horizontal, décalage vertical, flou, couleur */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5) !important;
+}
+
 /* Styles for header */
 
 header {
     font-size: large;
-    position: fixed;
     top: 0;
     width: 100%;
     margin-bottom: 40px;
@@ -46,15 +51,15 @@ header {
 
 /* Styles for main content */
 main {
+    margin-top: 110px !important;
+    max-height: 83vh;
     overflow-y: auto; /* Permet le défilement vertical uniquement si le contenu dépasse la hauteur maximale */
-    padding: 150px 20px 20px; /* Ajout de padding pour compenser la hauteur de la barre de navigation fixe */
-    height: 80vh;
+    padding: 40px 20px 20px; /* Ajout de padding pour compenser la hauteur de la barre de navigation fixe */
 }
 
 /* Styles for footer */
 footer {
     color: #fff;
-    padding: 10px 0;
 }
 
 /* General styles */
@@ -108,9 +113,13 @@ footer {
 }
 
 /* Responsive styles */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
     .container-fluid {
         margin-top: 0;
+    }
+
+    .hide-mobile {
+        display: none;
     }
 
     footer {
