@@ -13,16 +13,16 @@
     {% endblock %}
 </head>
 <body>
-<div class="container-fluid ">
-    <header class="row">
+<div class="container-fluid">
+    <header class="row fixed-top">
         {% include "fragments/nav.html.twig" %}
     </header>
     <main class="row">
         {% include "fragments/messages.html.twig" %}
         {% block body %}{% endblock %}
     </main>
-    <footer class="row text-center fixed-bottom">
-        <p class="py-4">
+    <footer class="row text-center align-self-center fixed-bottom">
+        <p>
             Projet Sortir &copy; {{ "now"|date("Y") }} ✌   {% if app.user %}{% if app.user.roles|length > 0 %}{% if app.user.roles[0] == "ROLE_ADMIN" %} - <a href="{{ path('admin') }}">Admin</a>{% endif %}{% endif %}{% endif %}
         </p>
     </footer>

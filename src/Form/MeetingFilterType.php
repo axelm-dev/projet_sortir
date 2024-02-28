@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use function Sodium\add;
 
 class MeetingFilterType extends AbstractType
 {
@@ -56,7 +57,12 @@ class MeetingFilterType extends AbstractType
                 'label' => "Sorties qui sont passées",
             ])
             ->add('rechercher', SubmitType::class, [
+                'attr' => ['class' => 'btn btn-custom'],
                 'label' => 'Rechercher'
+            ])
+            ->add('create_new', SubmitType::class, [
+                'attr' => ['class' => 'btn btn-custom'],
+                'label' => 'Créer une nouvelle sortie'
             ]);
     }
 

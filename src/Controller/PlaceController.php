@@ -35,7 +35,7 @@ class PlaceController extends AbstractController
             $entityManager->persist($place);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_place_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_meeting_new', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('place/new.html.twig', [

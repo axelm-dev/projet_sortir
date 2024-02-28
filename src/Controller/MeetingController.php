@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use function MongoDB\BSON\toJSON;
 
 #[IsGranted('ROLE_USER')]
 #[Route('/meeting')]
@@ -55,6 +56,10 @@ class MeetingController extends ProjectController
 
         $meetings = $this->getMeetings($meetings, $dateNow, $stateMeetingRepository, $entityManager, $user);
 
+        if($formFilter->get('create_new')->isClicked()){
+            return $this->redirectToRoute('app_meeting_new', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('meeting/index.html.twig', [
             'meetings' => $meetings,
             'meetingFilterForm' => $formFilter->createView(),
@@ -78,6 +83,11 @@ class MeetingController extends ProjectController
         }
 
         $meeting = new Meeting();
+        $request->getSession()->set('meeting', $meeting);
+        if($request->getSession()->get('meeting') !== null) {
+            $meeting = $request->getSession()->get('meeting_form_data');
+        }
+
         /**
          * @var User $user
          */
@@ -89,17 +99,28 @@ class MeetingController extends ProjectController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $meeting->setState($state);
-            $entityManager->persist($meeting);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_meeting_show', ['id' =>$meeting->getId()], Response::HTTP_SEE_OTHER);
+                if ($form->get('publish')->isClicked()) {
+                    $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_OPENED]);
+                }
+                $meeting->setState($state);
+                $entityManager->persist($meeting);
+                $entityManager->flush();
+                //supprimer le meeting de la session
+                return $this->redirectToRoute('app_meeting_show', ['id' =>$meeting->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('meeting/new.html.twig', [
             'meeting' => $meeting,
             'meetingForm' => $form->createView(),
         ]);
+    }
+
+    #[Route(name: 'app_meeting_data', methods: ['GET', 'POST'])]
+    public function save_meeting_data(Request $request): Response
+    {
+        //$meeting =
+        //$request->getSession()->set('meeting_form_data', $meeting);
+        return $this->redirectToRoute('app_place_new');
     }
 
     #[Route('/{id}', name: 'app_meeting_show', methods: ['GET'])]
@@ -159,7 +180,7 @@ class MeetingController extends ProjectController
     }
 
     #[Route('/{id}/edit', name: 'app_meeting_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Meeting $meeting, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
         if($this->authorizationService->hasAccess(self::PERM_MEETING_EDIT, $meeting) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour modifier cette sortie');
@@ -170,9 +191,13 @@ class MeetingController extends ProjectController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('publish')->isClicked()) {
+                $state = $stateMeetingRepository->findOneBy(['value'=>self::STATE_MEETING_OPENED]);
+                $meeting->setState($state);
+            }
             $entityManager->flush();
 
-            $this->redirectToRoute('app_meeting_show', ['id' =>$meeting->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_meeting_show', ['id' =>$meeting->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('meeting/edit.html.twig', [

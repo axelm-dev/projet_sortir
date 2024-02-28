@@ -1,16 +1,44 @@
 {{ form_start(meetingForm) }}
-        {{ form_row(meetingForm.name) }}
-        {{ form_row(meetingForm.campus) }}
-        {{ form_row(meetingForm.place) }}
-        {{ form_row(meetingForm.duration) }}
-        {{ form_row(meetingForm.date)}}
-        {{ form_row(meetingForm.usersMax)}}
-        {{ form_row(meetingForm.limitDate)}}
-        {{ form_row(meetingForm.textNote)}}
-        <button class="btn btn-custom">{{ button_label|default('Enregistrer') }}</button>
-        {% if meeting is defined and meeting.id is not empty %}
-                <a href="{{ path('app_meeting_publish', {'id': meeting.id}) }}" class="btn btn-custom">Publier la sortie</a>
+        {% if app.session.has('meeting')  %}
+                {{ form_row(meetingForm.name) }}
+                {{ form_row(meetingForm.campus) }}
+                {{ form_row(meetingForm.place) }}
+                <a href="{{ path('app_place_new') }}" class="btn btn-custom">+</a>
+                {{ form_row(meetingForm.duration) }}
+                {{ form_row(meetingForm.date)}}
+                {{ form_row(meetingForm.usersMax)}}
+                {{ form_row(meetingForm.limitDate)}}
+                {{ form_row(meetingForm.textNote)}}
+        {% else %}
+                {{ form_row(meetingForm.name) }}
+                {{ form_row(meetingForm.campus) }}
+                {{ form_row(meetingForm.place) }}
+                <a href="{{ path('app_place_new') }}" class="btn btn-custom">+</a>
+                {{ form_row(meetingForm.duration) }}
+                {{ form_row(meetingForm.date)}}
+                {{ form_row(meetingForm.usersMax)}}
+                {{ form_row(meetingForm.limitDate)}}
+                {{ form_row(meetingForm.textNote)}}
         {% endif %}
+
+        {{ form_widget(meetingForm.save) }}
+        {{ form_widget(meetingForm.publish) }}
+
+        {% if meeting is defined and meeting.id is not empty %}
+
+
+                {% if meeting.state.value == 'Créée' %}
+                        <a href="{{ path('app_meeting_delete', {'id': meeting.id}) }}" class="btn btn-custom">Supprimer la sortie</a>
+                {% endif %}
+
+                {% if meeting.state.value == 'Ouverte' %}
+                        <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}" class="btn btn-custom">Annuler la sortie</a>
+                {% endif %}
+
+                <a href="{{ path('app_meeting_index', {'id': meeting.id}) }}" class="btn btn-custom">Retour à la liste</a>
+        {% endif %}
+
+        <a href="{{ path('app_meeting_index') }}" class=" btn btn-custom">Annuler</a>
 {{ form_end(meetingForm) }}
 
 
