@@ -37,7 +37,7 @@ class MeetingController extends ProjectController
          * @var User $user
          */
         $user = $this->getUser();
-        if(!$this->authorizationService->hasAccess(self::PERM_MEETING_VIEW)) {
+        if(!$this->authorizationService->hasAccess(self::PERM_MEETING_VIEW, $user)) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour voir les sorties');
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
         }
@@ -77,7 +77,7 @@ class MeetingController extends ProjectController
     #[Route('/new', name: 'app_meeting_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
-        if($this->authorizationService->hasAccess(self::PERM_MEETING_NEW) === false) {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_NEW, $this->getUser()) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour créer une sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -93,24 +93,8 @@ class MeetingController extends ProjectController
         $form = $this->createForm(MeetingType::class, $meeting);
         $form->handleRequest($request);
 
-        if($request->getSession()->get('meeting_form_data') !== null) {
-            dd('retour');
-            /**
-             * @var Meeting $form_data
-             */
-            $form_data = $request->getSession()->get('meeting_form_data');
-            $meeting->setName($form_data->getName());
-            $meeting->setCampus($form_data->getCampus());
-            $meeting->setDuration($form_data->getDuration());
-            $meeting->setDate($form_data->getDate());
-            $meeting->setUsersMax($form_data->getUsersMax());
-            $meeting->setLimitDate($form_data->getLimitDate());
-            $meeting->setTextNote($form_data->getTextNote());
-        }
-
         if ($form->isSubmitted()) {
             if($form->get('add_place')->isClicked()){
-                $request->getSession()->set('meeting_form_data', $form->getData());
                 return $this->redirectToRoute('app_place_new');
             } elseif ($form->isValid()) {
                 if ($form->get('publish')->isClicked()) {
@@ -119,7 +103,7 @@ class MeetingController extends ProjectController
                 $meeting->setState($state);
                 $entityManager->persist($meeting);
                 $entityManager->flush();
-                $request->getSession()->remove('meeting_form_data');
+
                 return $this->redirectToRoute('app_meeting_show', ['id' =>$meeting->getId()], Response::HTTP_SEE_OTHER);
             }
         }
