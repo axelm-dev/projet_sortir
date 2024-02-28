@@ -24,7 +24,6 @@
                 <td>{{ place.longitude }}</td>
                 <td>
                     <a href="{{ path('app_place_show', {'id': place.id}) }}">show</a>
-
                     {% if "ROLE_ADMIN" in app.user.roles %}
                         <a href="{{ path('app_place_edit', {'id': place.id}) }}">edit</a>
                     {% endif %}
