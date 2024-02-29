@@ -99,7 +99,6 @@ footer {
 .table-responsive {
     margin-left: 40px;
     border-radius: 10px;
-    box-shadow: 6px 6px 11px rgba(0, 0, 0, 0.6);
 }
 
 .custom-table th,

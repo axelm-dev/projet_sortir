@@ -3,106 +3,84 @@
 {% block title %}Meeting{% endblock %}
 
 {% block body %}
-    <h1>Meeting</h1>
-    <div class="meeting-row">
-{#        <div class="col-8">#}
+    <h1 class="title meeting-title">Sortie</h1>
+    <div class="meeting-body">
+        <div class="meeting-main-content">
             <table class="table">
                 <tbody class="meeting-tBody">
-                <tr>
-                    <th class="meeting-transparent meeting-row-title">Nom de la sortie</th>
-                    <td class="meeting-transparent meeting-row-value">{{ meeting.name }}</td>
+                <tr class="meeting-main-content-tr">
+                    <th class="meeting-main-content-row meeting-th">Nom de la sortie</th>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.name }}</td>
                 </tr>
-                <tr>
-                    <th class="meeting-transparent meeting-row-title">Organisateur</th>
-                    <td class="meeting-transparent meeting-row-value">{{ meeting.organizer.login }}</td>
+                <tr class="meeting-main-content-tr">
+                    <th class="meeting-main-content-row meeting-th">Organisateur</th>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.organizer.login }}</td>
                 </tr>
-                <tr>
-                    <th class="meeting-transparent meeting-row-title">Campus</th>
-                    <td class="meeting-transparent meeting-row-value">{{ meeting.campus.name }}</td>
+                <tr class="meeting-main-content-tr">
+                    <th class="meeting-main-content-row meeting-th">Campus</th>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.campus.name }}</td>
                 </tr>
-                <tr>
-                    <th class="meeting-transparent meeting-row-title">Lieu</th>
-                    <td class="meeting-transparent meeting-row-value">{{ meeting.place.name }}</td>
+                <tr class="meeting-main-content-tr">
+                    <th class="meeting-main-content-row meeting-th">Lieu</th>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.place.name }}</td>
                 </tr>
-                <tr>
-                    <th class="meeting-transparent meeting-row-title">Ville</th>
-                    <td class="meeting-transparent meeting-row-value">{{ meeting.place.city.name }}</ td>
+                <tr class="meeting-main-content-tr">
+                    <th class="meeting-main-content-row meeting-th">Ville</th>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.place.city.name }}</ td>
                 </tr>
-                <tr>
-                    <th class="meeting-transparent meeting-row-title">Durée</th>
-                    <td class="meeting-transparent meeting-row-value">{{ meeting.duration }}h</td>
+                <tr class="meeting-main-content-tr">
+                    <th class="meeting-main-content-row meeting-th">Durée</th>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.duration }}h</td>
                 </tr>
-                <tr>
-                    <th class="meeting-transparent meeting-row-title">Date</th>
-                    <td class="meeting-transparent meeting-row-value">{{ meeting.date ? meeting.date|date('Y-m-d H:i') : '' }}</td>
+                <tr class="meeting-main-content-tr">
+                    <th class="meeting-main-content-row meeting-th">Date</th>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.date ? meeting.date|date('Y-m-d H:i') : '' }}</td>
                 </tr>
-                <tr>
-                    <th class="meeting-transparent meeting-row-title">Nombre de participants maximum</th>
-                    <td class="meeting-transparent meeting-row-value">{{ meeting.usersMax }}</td>
+                <tr class="meeting-main-content-tr">
+                    <th class="meeting-main-content-row meeting-th">Nombre de participants maximum</th>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.usersMax }}</td>
                 </tr>
-                <tr>
-                    <th class="meeting-transparent meeting-row-title">Participants inscrits</th>
-                    <td class="meeting-transparent meeting-row-value">{{ meeting.nbUser }}</td>
+                <tr class="meeting-main-content-tr">
+                    <th class="meeting-main-content-row meeting-th">Participants inscrits</th>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.nbUser }}</td>
                 </tr>
-                <tr>
-                    <th class="meeting-transparent meeting-row-title">Sortie</th>
-                    <td class="meeting-transparent meeting-row-value">{{ meeting.state.value }}</td>
+                <tr class="meeting-main-content-tr">
+                    <th class="meeting-main-content-row meeting-th">Sortie</th>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.state.value }}</td>
                 </tr>
-                <tr>
-                    <th class="meeting-transparent meeting-row-title">Information</th>
-                    <td class="meeting-transparent meeting-row-value">{{ meeting.textNote }}</td>
+                <tr class="meeting-main-content-tr">
+                    <th class="meeting-main-content-row meeting-th">Information</th>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.textNote }}</td>
                 </tr>
-                <tr>
-                    <th class="meeting-transparent meeting-row-title">Date limite d'inscription</th>
-                    <td class="meeting-transparent meeting-row-value">{{ meeting.limitDate ? meeting.limitDate|date('Y-m-d') : '' }}</td>
+                <tr class="meeting-main-content-tr">
+                    <th class="meeting-main-content-row meeting-th">Date limite d'inscription</th>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.limitDate ? meeting.limitDate|date('Y-m-d') : '' }}</td>
                 </tr>
                 {% if meeting.annulationReason != null %}
-                    <tr>
-                        <th class="meeting-transparent meeting-row-title">Raison de l'annulation</th>
-                        <td class="meeting-transparent meeting-row-value">{{ meeting.annulationReason }}</td>
+                    <tr class="meeting-main-content-tr">
+                        <th class="meeting-main-content-row meeting-th">Raison de l'annulation</th>
+                        <td class="meeting-main-content-row meeting-td">{{ meeting.annulationReason }}</td>
                     </tr>
                 {% endif %}
                 </tbody>
             </table>
-{#        </div>#}
-{#        <div class="col-4">#}
-{#            <table class="table">#}
-{#                <thead>#}
-{#                    <tr>#}
-{#                        <th>Participants</th>#}
-{#                        <th>Actions</th>#}
-{#                    </tr>#}
-{#                </thead>#}
-{#                <tbody>#}
-{#                    {% for user in meeting.participants %}#}
-{#                        <tr>#}
-{#                            <td>{{ user.login }}</td>#}
-{#                            <td>#}
-{#                                <a href="{{ path('app_profile_user', {'id': user.id, 'sortie': meeting.id}) }}" class="btn btn-custom">Voir</a>#}
-{#                            </td>#}
-{#                        </tr>#}
-{#                    {% endfor %}#}
-{#                </tbody>#}
-{#            </table>#}
-{#        </div>#}
-        <div class="col-4">
-            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#participantsTable" aria-expanded="false" aria-controls="participantsTable">
-                Toggle Participants
-            </button>
-            <div class="collapse" id="participantsTable">
+        </div>
+
+        <div class="meeting-main-content collapse" id="participantsTable">
+            <div>
                 <table class="table">
                     <thead>
-                    <tr>
-                        <th class="meeting-transparent meeting-row-title">Participants</th>
-                        <th class="meeting-transparent meeting-row-value">Actions</th>
+                    <tr class="meeting-main-content-tr">
+                        <th class="meeting-main-content-row meeting-th">Participants</th>
+                        <th class="meeting-main-content-row meeting-td">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for user in meeting.participants %}
-                        <tr>
-                            <td>{% if user.profile %}{% if user.profile.image %}<img width="50" height="50" src="{{ vich_uploader_asset(user.profile, 'imageFile') }}" alt="{{ user.profile.image }}"> {% endif %}{% endif %}{{ user.login }}</td>
-                            <td>
-                                <a href="{{ path('app_profile_user', {'id': user.id, 'sortie': meeting.id}) }}" class="btn btn-custom">Voir</a>
+                        <tr class="meeting-main-content-tr">
+                            <td class="meeting-main-content-row meeting-th">{% if user.profile %}{% if user.profile.image %}<img width="50" height="50" src="{{ vich_uploader_asset(user.profile, 'imageFile') }}" alt="{{ user.profile.image }}"> {% endif %}{% endif %}{{ user.login }}</td>
+                            <td class="meeting-main-content-row meeting-td">
+                                <a href="{{ path('app_profile_user', {'id': user.id, 'sortie': meeting.id}) }}" class="btn">Voir</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -110,14 +88,19 @@
                 </table>
             </div>
         </div>
+    </div>
 
+<div class="text-center">
+    <button class="btn btn-custom meeting-btn" type="button" data-bs-toggle="collapse" data-bs-target="#participantsTable" aria-expanded="false" aria-controls="participantsTable">
+        Afficher les paritcipants
+    </button>
 
-
-        <a href="{{ path('app_meeting_index') }}" class="btn btn-custom">Retour à la liste</a>
+        <a href="{{ path('app_meeting_index') }}" class="btn btn-custom meeting-btn">Retour à la liste</a>
     {% if (meeting.state.value != state_canceled) and meeting.organizer.id == app.user.id %}
-        <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}" class="btn btn-custom">Modifier la sortie</a>
+        <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}" class="btn btn-custom meeting-btn">Modifier la sortie</a>
         {% if "now"|date("Y-m-d") < meeting.limitDate|date('Y-m-d') %}
-            <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}" class="btn btn-custom">Annuler la sortie</a>
+            <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}" class="btn btn-custom meeting-btn">Annuler la sortie</a>
         {% endif %}
     {% endif %}
+</div>
 {% endblock %}

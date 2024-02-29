@@ -1,30 +1,68 @@
-.meeting-row{
-    /*position: fixed;*/
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*align-items: flex-start;*/
-    /*flex-direction: row-reverse;*/
-    /*align-content: flex-start;*/
-    border-radius: 11px !important;
-    background-color: rgba(0, 0, 0, 0.3);
+.meeting-body{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: center;
+    align-items: center;
+    .meeting-main-content{
+        border-radius: 10px !important;
+        background-color: rgba(0, 0, 0, 0.3);
+        margin: 15px;
+        min-width: 30%;
+        width: 47%;
+        height: 90%;
+        padding: 10px;
+        box-shadow: 6px 6px 11px rgba(0, 0, 0, 0.6);
+
+        .meeting-main-content-row{
+            background-color: transparent !important;
+            border-style: hidden;
+        }
+    }
+}
+.meeting-title{
+    display: flex;
+    justify-content: center;
 }
 
 
-
-.meeting-transparent{
-    background-color: transparent !important;
+.meeting-td{
+    color: whitesmoke !important;
+    background-color: cornflowerblue;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+    flex-direction: column;
 
 }
-.meeting-row-value{
+.meeting-th{
     color: whitesmoke !important;
 
-}
-.meeting-row-title{
-    color: whitesmoke !important;
 
 }
 
 /*.meeting-tBody{*/
-/*    background-color: rgba(0, 0, 0, 0.3);*/
-/*    border-radius: 11px;*/
+/*    border-style: dot-dash !important;*/
 /*}*/
+
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+
+    .meeting-body{
+        width: 100%;
+        height: fit-content;
+        .meeting-main-content{
+            width: 90%;
+            .meeting-main-content-tr{
+                display: flex;
+                flex-wrap: wrap;
+            }
+        }
+    }
+    .meeting-btn{
+        margin: .5rem !important;
+    }
+}
