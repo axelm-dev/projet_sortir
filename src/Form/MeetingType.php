@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,16 +26,23 @@ class MeetingType extends AbstractType
             ->add('campus',EntityType::class,[
                 'class'=>Campus::class,
                 'choice_label' => 'name',
+                'label' => 'Campus',
                 'placeholder'=>'Choisir un campus',
                 'required'=>true,
             ])
             ->add('place',EntityType::class,[
                 'class'=>Place::class,
                 'choice_label' => 'name',
+                'label' => 'Lieu',
                 'placeholder'=>'Choisir un lieu',
                 'required'=>true,
+                'attr' => [
+                    'class' => 'space-reducer'
+                ]
             ])
-            ->add('duration')
+            ->add('duration', IntegerType::class, [
+                'label' => 'Durée en minutes',
+            ])
             ->add('date', DateTimeType::class, [
                 'label' => 'Date',
                 'widget' => 'single_text',
@@ -43,13 +51,16 @@ class MeetingType extends AbstractType
                     'min' => (new \DateTime())->format('Y-m-d h:i')
                 ]
             ])
-            ->add('usersMax')
+            ->add('usersMax', IntegerType::class, [
+                'label' => 'Participants maximum'
+            ])
             ->add('limitDate', DateType::class, [
-                'label' => 'Date limite d\'inscription',
+                'label' => 'Inscription jusqu\'au',
                 'widget' => 'single_text',
                 'html5' => true,
                 'attr' => [
-                    'min' => (new \DateTime())->format('Y-m-d')
+                    'min' => (new \DateTime())->format('Y-m-d'),
+                    'max' => ('date')
                 ]
             ])
             ->add('textNote',TextType::class,[
@@ -65,7 +76,7 @@ class MeetingType extends AbstractType
                 'label' => 'Publier'
             ])
             ->add('add_place', SubmitType::class, [
-                'attr' => ['class' => 'btn btn-custom'],
+                'attr' => ['class' => 'btn btn-add'],
                 'label' => '+'
             ])
         ;

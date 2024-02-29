@@ -178,8 +178,43 @@ a:hover {
 
 }
 
+.custom-card {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding : 20px;
+    height: fit-content;
+    border-radius: 10px;
+    box-shadow: 6px 6px 11px rgba(0, 0, 0, 0.6);
+
+}
+
+.btn-add {
+    margin: 0;
+    background-color: rgb(2, 34, 122, 0.3); /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    font-size: 16px; /* Taille de la police */
+    cursor: pointer; /* Curseur pointer */
+    height: 40px;
+    width: 40px;
+    border-radius: 20px; /* Bordure arrondie */
+    box-shadow: 4px 2px 11px rgba(0, 0, 0, 0.6);
+}
+
+.space-reducer {
+    margin-left: 11px; /* Ajustez cette valeur selon vos besoins */
+}
+
 .mobile-th {
     display: none;
+}
+
+/* Ajoute de l'espace à droite du label */
+.label-space {
+    margin-right: 10px; /* Ajustez cette valeur selon l'espace désiré */
+}
+
+/* Ou, ajoute de l'espace à gauche du champ */
+.input-space {
+    margin-left: 120px; /* Ajustez cette valeur selon l'espace désiré */
 }
 
 /* Responsive styles */
