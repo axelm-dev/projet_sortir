@@ -7,18 +7,14 @@ use App\Entity\User;
 use App\Form\MeetingCancelType;
 use App\Form\MeetingFilterType;
 use App\Form\MeetingType;
-use App\Form\SignMeetingType;
 use App\Repository\MeetingRepository;
 use App\Repository\StateMeetingRepository;
-use App\Repository\UserRepository;
 use App\Service\AuthorizationService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use function MongoDB\BSON\toJSON;
 
 #[IsGranted('ROLE_USER')]
 #[Route('/meeting')]
@@ -37,7 +33,7 @@ class MeetingController extends ProjectController
          * @var User $user
          */
         $user = $this->getUser();
-        if(!$this->authorizationService->hasAccess(self::PERM_MEETING_VIEW, $user)) {
+        if(!$this->authorizationService->hasAccess(self::PERM_MEETING_VIEW)) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour voir les sorties');
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
         }
@@ -77,7 +73,7 @@ class MeetingController extends ProjectController
     #[Route('/new', name: 'app_meeting_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, StateMeetingRepository $stateMeetingRepository): Response
     {
-        if($this->authorizationService->hasAccess(self::PERM_MEETING_NEW, $this->getUser()) === false) {
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_NEW) === false) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour créer une sortie');
             return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -199,38 +195,43 @@ class MeetingController extends ProjectController
     #[Route('/{id}/registerToMeeting', name: 'app_meeting_registerToMeeting', methods: ['GET', 'POST'])]
     public function registerToMeeting(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
-        if($this->authorizationService->hasAccess('REGISTER_MEETING', $meeting) === false) {
-            $this->addFlash('danger', 'Vous n\'avez pas les droits pour participer à cette sortie');
-            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
-        }
         /**
          * @var User $user
          */
         $user = $this->getUser();
-        if($user->getMeetingParticipation()->get($meeting->getId()) == null){
-            $meeting->addParticipant($user);
-            $meeting->setNbUser(count($meeting->getParticipants()));
-            $entityManager->flush();
-            $this->addFlash('success', 'Vous participez !');
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_REGISTER, $meeting) === false) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour participer à cette sortie');
+            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        } else {
+            if($user->getMeetingParticipation()->get($meeting->getId()) == null){
+                $meeting->addParticipant($user);
+                $meeting->setNbUser(count($meeting->getParticipants()));
+                $entityManager->flush();
+                $this->addFlash('success', 'Vous participez !');
+            }
         }
 
         return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
     }
+
     #[Route('/{id}/unRegisterToMeeting', name: 'app_meeting_unRegisterToMeeting', methods: ['GET', 'POST'])]
     public function unRegisterToMeeting(Request $request, Meeting $meeting, EntityManagerInterface $entityManager): Response
     {
-        if($this->authorizationService->hasAccess('UNREGISTER_MEETING', $meeting) === false) {
-            $this->addFlash('danger', 'Vous n\'avez pas les droits pour ne plus participer à cette sortie');
-            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
-        }
         /**
          * @var User $user
          */
         $user = $this->getUser();
-        $meeting->removeParticipant($user);
-        $meeting->setNbUser(count($meeting->getParticipants()));
-        $entityManager->flush();
-        $this->addFlash('success', 'Vous ne participez plus !');
+        if($this->authorizationService->hasAccess(self::PERM_MEETING_UNREGISTER, $meeting) === false) {
+            dump('test');
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour ne plus participer à cette sortie');
+            return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
+        } else {
+            $meeting->removeParticipant($user);
+            $meeting->setNbUser(count($meeting->getParticipants()));
+            $entityManager->flush();
+            $this->addFlash('success', 'Vous ne participez plus !');
+        }
+
         return $this->redirectToRoute('app_meeting_index', [], Response::HTTP_SEE_OTHER);
     }
 
