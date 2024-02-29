@@ -79,7 +79,7 @@ class AuthorizationService implements PermAndStateAppInterface
     {
         $user = $this->security->getUser();
         if($user && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            if($meeting->getOrganizer()->getId() === $user->getId()) {
+            if(($meeting->getOrganizer()->getId() === $user->getId()) || $this->authorizationChecker->isGranted('ROLE_ADMIN')) {
                 return $this->dateNow < $meeting->getLimitDate();
             } else {
                 return false;
