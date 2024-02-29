@@ -2,6 +2,7 @@
 
 namespace App\Service;
 use App\Controller\PermAndStateAppInterface;
+use App\Entity\Meeting;
 use App\Entity\User as AppUser;
 use App\Controller\ProjectController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -12,13 +13,14 @@ class AuthorizationService implements PermAndStateAppInterface
     private AuthorizationCheckerInterface $authorizationChecker;
 
     private Security $security;
+    private \DateTime $dateNow;
 
 
     public function __construct(AuthorizationCheckerInterface $authorizationChecker, Security $security)
     {
         $this->authorizationChecker = $authorizationChecker;
         $this->security = $security;
-
+        $this->dateNow = new \DateTime('now');
     }
 
     public function hasAccess($attributes, $object = null): bool
@@ -35,10 +37,10 @@ class AuthorizationService implements PermAndStateAppInterface
             self::PERM_MEETING_UNREGISTER => $this->canUnregisterMeeting($object),
 
             // PLACE
-            self::PERM_PLACE_EDIT => $this->canEditPlace($user, $object),
-            self::PERM_PLACE_DELETE => $this->canDeletePlace($user, $object),
-            self::PERM_PLACE_VIEW => $this->canViewPlace($user, $object),
-            self::PERM_PLACE_NEW => $this->canNewPlace($user, $object),
+            self::PERM_PLACE_EDIT => $this->canEditPlace($object),
+            self::PERM_PLACE_DELETE => $this->canDeletePlace($object),
+            self::PERM_PLACE_VIEW => $this->canViewPlace($object),
+            self::PERM_PLACE_NEW => $this->canNewPlace($object),
 
             default => false,
         };
@@ -47,13 +49,20 @@ class AuthorizationService implements PermAndStateAppInterface
 
     private function canEditMeeting($meeting): bool
     {
+        /**
+         * @var Meeting $meeting
+         */
+        
         $user = $this->security->getUser();
         if($user && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            if($meeting->getOrganizer()->getId() === $this->authorizationChecker->getUser()->getId()) {
-                return true;
+            if($meeting->getOrganizer()->getId() === $user->getId()) {
+                return $this->dateNow < $meeting->getLimitDate();
+            } else {
+                return false;
             }
+        } else {
+            return false;
         }
-        return $this->authorizationChecker->isGranted('ROLE_ADMIN');
     }
 
     private function canViewMeeting($user): bool
@@ -70,20 +79,31 @@ class AuthorizationService implements PermAndStateAppInterface
     {
         $user = $this->security->getUser();
         if($user && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            if($meeting->getOrganizer()->getId() === $this->authorizationChecker->getUser()->getId()) {
-                return true;
+            if($meeting->getOrganizer()->getId() === $user->getId()) {
+                return $this->dateNow < $meeting->getLimitDate();
+            } else {
+                return false;
             }
+        } else {
+            return false;
         }
-
-        return $this->authorizationChecker->isGranted('ROLE_ADMIN');
     }
 
     private function canPublishMeeting($meeting): bool
     {
+        /**
+         * @var Meeting $meeting
+         */
         $user = $this->security->getUser();
         if($user && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            if($meeting->getOrganizer()->getId() === $this->authorizationChecker->getUser()->getId()) {
-                return true;
+            if($meeting->getOrganizer()->getId() === $user->getId()) {
+                if($meeting->getState()->getValue() === self::STATE_MEETING_OPENED) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
             }
         }
 
@@ -104,7 +124,7 @@ class AuthorizationService implements PermAndStateAppInterface
     {
         $user = $this->security->getUser();
         if($user && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            if($object->getOrganizer()->getId() === $this->authorizationChecker->getUser()->getId()) {
+            if($object->getOrganizer()->getId() === $user->getId()) {
                 return true;
             }
         }
@@ -116,8 +136,12 @@ class AuthorizationService implements PermAndStateAppInterface
     private function canRegisterMeeting($meeting): bool
     {
         $user = $this->security->getUser();
-        if($user instanceof AppUser && !$meeting->getParticipants()->contains($user)) {
-            return true;
+        if($user && !$meeting->getParticipants()->contains($user)) {
+            if($meeting->getState()->getValue() === self::STATE_MEETING_OPENED || ($meeting->getState()->getValue() === self::STATE_MEETING_CLOSED && $this->dateNow < $meeting->getLimitDate())) {
+                return true;
+            } else {
+                return false;
+            }
         }else {
             return false;
         }
@@ -126,8 +150,12 @@ class AuthorizationService implements PermAndStateAppInterface
     private function canUnregisterMeeting($meeting): bool
     {
         $user = $this->security->getUser();
-        if(($user instanceof AppUser) && $meeting->getParticipants()->contains($user)) {
-            return true;
+        if($user && $meeting->getParticipants()->contains($user)) {
+            if($meeting->getState()->getValue() === self::STATE_MEETING_OPENED || ($meeting->getState()->getValue() === self::STATE_MEETING_CLOSED && $this->dateNow < $meeting->getLimitDate())) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
@@ -135,32 +163,35 @@ class AuthorizationService implements PermAndStateAppInterface
 
 
 
-    private function canEditPlace($user, mixed $object): bool
+    private function canEditPlace($object): bool
     {
-        if($user instanceof AppUser && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+        $user = $this->security->getUser();
+        if($user && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return true;
         }
 
         return $this->authorizationChecker->isGranted('ROLE_ADMIN');
     }
 
-    private function canDeletePlace($user, mixed $object): bool
+    private function canDeletePlace($object): bool
     {
         return $this->authorizationChecker->isGranted('ROLE_ADMIN');
     }
 
-    private function canViewPlace($user, mixed $object): bool
+    private function canViewPlace($object): bool
     {
-        if($user instanceof AppUser && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+        $user = $this->security->getUser();
+        if($user && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return true;
         }
 
         return $this->authorizationChecker->isGranted('ROLE_ADMIN');
     }
 
-    private function canNewPlace($user, mixed $object): bool
+    private function canNewPlace($object): bool
     {
-        if($user instanceof AppUser && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+        $user = $this->security->getUser();
+        if($user && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return true;
         }
 
