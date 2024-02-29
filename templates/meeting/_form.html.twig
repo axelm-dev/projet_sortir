@@ -1,32 +1,88 @@
 {{ form_start(meetingForm) }}
-        {{ form_row(meetingForm.name) }}
-        {{ form_row(meetingForm.campus) }}
-        {{ form_row(meetingForm.place) }}
-        {{ form_widget(meetingForm.add_place) }}
-        {{ form_row(meetingForm.duration) }}
-        {{ form_row(meetingForm.date)}}
-        {{ form_row(meetingForm.usersMax)}}
-        {{ form_row(meetingForm.limitDate)}}
-        {{ form_row(meetingForm.textNote)}}
+<div class="container">
+        <div class="row justify-content-center">
+                <div class="title col-md-8 text-center mb-3">
+                        <h1>VOTRE SORTIE</h1>
+                </div>
+        </div>
+        <form>
+                <div class="d-flex justify-content-center mb-3">
+                        <div class="custom-card col-md-8 mb-3">
 
-        {{ form_widget(meetingForm.save) }}
-        {{ form_widget(meetingForm.publish) }}
+                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.name) }}
+                                        {{ form_widget(meetingForm.name, {'attr': {'class': 'form-control input-space'}}) }}
+                                </div>
 
-        {% if meeting is defined and meeting.id is not empty %}
+                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.campus) }}
+                                        {{ form_widget(meetingForm.campus, {'attr': {'class': 'form-control input-space'}}) }}
+                                </div>
 
+                                <div class="label-space d-flex justify-content-between align-items-center mb-3">
+                                                {{ form_label(meetingForm.place) }}
+                                                {{ form_widget(meetingForm.place, {'attr': {'class': 'form-control input-space'}}) }}
+                                                {{ form_widget(meetingForm.add_place) }}
+                                </div>
 
-                {% if meeting.state.value == 'Créée' %}
-                        <a href="{{ path('app_meeting_delete', {'id': meeting.id}) }}" class="btn btn-custom">Supprimer la sortie</a>
-                {% endif %}
+                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.duration) }}
+                                        {{ form_widget(meetingForm.duration, {'attr': {'class': 'form-control input-space'}}) }}
+                                </div>
 
-                {% if meeting.state.value == 'Ouverte' %}
-                        <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}" class="btn btn-custom">Annuler la sortie</a>
-                {% endif %}
+                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.date) }}
+                                        {{ form_widget(meetingForm.date, {'attr': {'class': 'form-control input-space'}}) }}
+                                </div>
 
-                <a href="{{ path('app_meeting_index', {'id': meeting.id}) }}" class="btn btn-custom">Retour à la liste</a>
-        {% endif %}
+                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.usersMax) }}
+                                        {{ form_widget(meetingForm.usersMax, {'attr': {'class': 'form-control input-space'}}) }}
+                                </div>
 
-        <a href="{{ path('app_meeting_index') }}" class=" btn btn-custom">Annuler</a>
+                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.limitDate) }}
+                                        {{ form_widget(meetingForm.limitDate, {'attr': {'class': 'form-control input-space'}}) }}
+                                </div>
+
+                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.textNote) }}
+                                        {{ form_widget(meetingForm.textNote, {'attr': {'class': 'form-control input-space'}}) }}
+                                </div>
+                        </div>
+                </div>
+
+                <!-- Boutons sous le formulaire -->
+                <div class="d-flex justify-content-center">
+                        <div class="row">
+                                <div class="col">
+                                        {{ form_widget(meetingForm.save) }}
+                                </div>
+                                <div class="col">
+                                        {{ form_widget(meetingForm.publish) }}
+                                </div>
+                                {% if meeting is defined and meeting.id is not empty %}
+                                        {% if meeting.state.value == 'Créée' %}
+                                                <div class="col">
+                                                        <a href="{{ path('app_meeting_delete', {'id': meeting.id}) }}" class="btn btn-custom">Supprimer la sortie</a>
+                                                </div>
+                                        {% endif %}
+                                        {% if meeting.state.value == 'Ouverte' %}
+                                                <div class="col">
+                                                        <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}" class="btn btn-custom">Annuler la sortie</a>
+                                                </div>
+                                        {% endif %}
+                                        <div class="col">
+                                                <a href="{{ path('app_meeting_index', {'id': meeting.id}) }}" class="btn btn-custom">Retour à la liste</a>
+                                        </div>
+                                {% endif %}
+                                <div class="col">
+                                        <a href="{{ path('app_meeting_index') }}" class="btn btn-custom">Annuler</a>
+                                </div>
+                        </div>
+                </div>
+        </form>
+</div>
 {{ form_end(meetingForm) }}
 
 

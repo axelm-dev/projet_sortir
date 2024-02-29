@@ -20,7 +20,7 @@
             </div>
             {% if app.user %}
                 <div>
-                    <a class="profile-mobile nav-link" href="{{ path('app_profile') }}">{% if app.user.profile != null %}{{ app.user.profile.firstName ~" "~app.user.profile.lastName }}{% else %}Mon Profil{% endif %}</a>
+                    <a class="profile-mobile nav-link" href="{{ path('app_profile_user', {'id':app.user.id}) }}">{% if app.user.profile != null %}{{ app.user.profile.firstName ~" "~app.user.profile.lastName }}{% else %}Mon Profil{% endif %}</a>
                 </div>
             {% endif %}
         </div>
