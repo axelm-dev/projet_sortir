@@ -4,6 +4,7 @@ body {
     font-family: Consolas, serif;
     color: #fff;
     animation: gradient 15s ease infinite;
+    min-height: 88vh;
 }
 
 @keyframes gradient {
@@ -18,11 +19,15 @@ body {
     }
 }
 
+.title {
+    /* Ombre : décalage horizontal, décalage vertical, flou, couleur */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5) !important;
+}
+
 /* Styles for header */
 
 header {
     font-size: large;
-    position: fixed;
     top: 0;
     width: 100%;
     margin-bottom: 40px;
@@ -44,17 +49,21 @@ header {
     color: #0a0a0a;
 }
 
+.profile-mobile {
+    padding-left: 5px;
+}
+
 /* Styles for main content */
 main {
+    margin-top: 110px !important;
+    max-height: 83vh;
     overflow-y: auto; /* Permet le défilement vertical uniquement si le contenu dépasse la hauteur maximale */
-    padding: 150px 20px 20px; /* Ajout de padding pour compenser la hauteur de la barre de navigation fixe */
-    height: 80vh;
+    padding: 40px 20px 20px; /* Ajout de padding pour compenser la hauteur de la barre de navigation fixe */
 }
 
 /* Styles for footer */
 footer {
     color: #fff;
-    padding: 10px 0;
 }
 
 /* General styles */
@@ -79,6 +88,8 @@ footer {
 }
 
 .custom-table {
+    display: block; /* Nécessaire pour appliquer correctement le défilement à tbody */
+    overflow: hidden;
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
@@ -86,16 +97,21 @@ footer {
 }
 
 .table-responsive {
+    margin-left: 40px;
     border-radius: 10px;
     box-shadow: 6px 6px 11px rgba(0, 0, 0, 0.6);
 }
 
 .custom-table th,
 .custom-table td {
+    width: 100%;
     padding: 10px;
 }
 
 .custom-thead {
+    display: flex; /* Garde l'en-tête du tableau visible */
+    width: 100%; /* Assurez-vous que l'en-tête du tableau s'étend sur toute la largeur */
+    table-layout: fixed; /* Garde les colonnes en-tête alignées avec les colonnes du corps */
     background-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -103,14 +119,114 @@ footer {
     color: white;
 }
 
+.custom-table tbody {
+    display: block; /* Permet le défilement dans le corps du tableau */
+    height: 485px; /* Ajustez cette valeur à la hauteur souhaitée */
+    overflow-y: auto; /* Active le défilement vertical si le contenu dépasse la hauteur */
+    width: 100%;
+}
+
+.custom-table tr {
+    display: flex; /* Assure que les rangées du tableau s'affichent correctement */
+    flex-direction: row;
+    width: 100%; /* Assure que les rangées du tableau s'étendent sur toute la largeur */
+    table-layout: fixed; /* Assure que les cellules de la rangée s'alignent correctement */
+}
+
 .custom-table tbody tr:nth-of-type(even) {
     background-color: #555;
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(85, 85, 85, 0.56);
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+a {
+    color: #0f172a;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #9cd5c9;
+    text-decoration: none;
+}
+
+.filter {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding-top: 20px;
+    padding-left: 20px;
+    height: fit-content;
+    border-radius: 10px;
+    box-shadow: 6px 6px 11px rgba(0, 0, 0, 0.6);
+
+}
+
+.mobile-th {
+    display: none;
+}
+
 /* Responsive styles */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
+
+    header {
+        margin: 0 !important;
+        padding: 0;
+    }
+
+    header .container-fluid {
+        background: linear-gradient(-45deg, #4d5da9, rgba(163, 60, 231, 1), #46b4de, rgba(35, 213, 186, 1));
+        animation: gradient 15s ease infinite;
+    }
+
+    .navbar-toggler {
+        margin-right: 10px;
+    }
+
+    .profile-mobile {
+        padding-left: 0 !important;
+        padding-top: 4px;
+    }
+
+    .mobile-th {
+        display: contents;
+    }
+
+    .custom-thead  {
+        display: none;
+    }
+
+    .custom-table tr {
+        flex-direction: column;
+    }
+
+    .table-responsive {
+        margin-left: 0;
+        margin-top: 40px;
+    }
+
     .container-fluid {
         margin-top: 0;
+    }
+
+    .hide-mobile {
+        display: none;
     }
 
     footer {

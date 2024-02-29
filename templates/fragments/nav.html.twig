@@ -11,19 +11,15 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup"> <!-- Utiliser justify-content-end pour aligner les liens à droite -->
                 <div class="navbar-nav">
-                    <a class="nav-link active" aria-current="page" href="{{ path("app_home") }}">Accueil</a>
-                    <a href="{{ path("app_meeting_index") }}" class="nav-link">Sorties</a>
-                    <a href="{{ path("app_place_index") }}" class="nav-link">Lieux</a>
+                    <a class="nav-link active" aria-current="page" href="{{ path("app_meeting_index") }}">Accueil</a>
                     {% if app.user %}
                         <a class="nav-link" href="{{ url("app_logout") }}">Déconnexion</a>
-                    {% else %}
-                        <a class="nav-link" href="{{ url("app_login") }}">Connexion</a>
                     {% endif %}
                 </div>
             </div>
             {% if app.user %}
                 <div>
-                    <a class="nav-link" href="{{ path('app_profile') }}">Mon Profil</a>
+                    <a class="profile-mobile nav-link" href="{{ path('app_profile') }}">{% if app.user.profile != null %}{{ app.user.profile.firstName ~" "~app.user.profile.lastName }}{% else %}Mon Profil{% endif %}</a>
                 </div>
             {% endif %}
         </div>

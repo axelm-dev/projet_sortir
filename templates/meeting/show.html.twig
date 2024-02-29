@@ -76,7 +76,7 @@
                 <tbody>
                     {% for user in meeting.participants %}
                         <tr>
-                            <td>{{ user.login }}</td>
+                            <td>{% if user.profile %}{% if user.profile.image %}<img width="50" height="50" src="{{ vich_uploader_asset(user.profile, 'imageFile') }}" alt="{{ user.profile.image }}"> {% endif %}{% endif %}{{ user.login }}</td>
                             <td>
                                 <a href="{{ path('app_profile_user', {'id': user.id, 'sortie': meeting.id}) }}" class="btn btn-custom">Voir</a>
                             </td>

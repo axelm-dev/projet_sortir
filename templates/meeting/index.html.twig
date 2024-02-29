@@ -4,28 +4,32 @@
 
 {% block body %}
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h1 class="text-center mb-4">LES SORTIES</h1>
+        <h1 class="title text-center mb-5">LES SORTIES</h1>
+        <div class="mobile-filter-collapse text-center mb-3">
+            <button class="btn btn-custom" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-filter" aria-expanded="false" aria-controls="collapse-filter">
+                Rechercher une sortie
+            </button>
+        </div>
+        <div class="collapse filter col-md-4" id="collapse-filter">
             {{ form_start(meetingFilterForm) }}
             <div class="row">
-                <div class="col-md-6">
-                    {{ form_row(meetingFilterForm.campus) }}
-                    {{ form_row(meetingFilterForm.search) }}
-                    <div class="form-group">
-                        {{ form_row(meetingFilterForm.start_date) }}
-                        {{ form_row(meetingFilterForm.end_date) }}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    {{ form_row(meetingFilterForm.organisateur) }}
-                    {{ form_row(meetingFilterForm.inscrit) }}
-                    {{ form_row(meetingFilterForm.non_inscrit) }}
-                    {{ form_row(meetingFilterForm.state) }}
+                {{ form_row(meetingFilterForm.create_new) }}
+                {{ form_row(meetingFilterForm.campus) }}
+                {{ form_row(meetingFilterForm.search) }}
+                {{ form_row(meetingFilterForm.start_date) }}
+                {{ form_row(meetingFilterForm.end_date) }}
+
+                {{ form_row(meetingFilterForm.organisateur) }}
+                {{ form_row(meetingFilterForm.inscrit) }}
+                {{ form_row(meetingFilterForm.non_inscrit) }}
+                {{ form_row(meetingFilterForm.state) }}
+            </div>
+            <div class="row">
                     {{ form_row(meetingFilterForm.rechercher) }}
-                </div>
             </div>
             {{ form_end(meetingFilterForm) }}
-
+        </div>
+        <div class="col-md-8">
             <div class="table-responsive">
                 <table class="custom-table">
                     <thead class="custom-thead">
@@ -34,8 +38,7 @@
                         <th>Date</th>
                         <th>Clôture</th>
                         <th>Inscriptions</th>
-                        <th>Organisateur</th>
-                        <th>Inscrit</th>
+                        <th>Organisation</th>
                         <th>Sortie</th>
                         <th>Actions</th>
                     </tr>
@@ -43,14 +46,13 @@
                     <tbody>
                     {% for meeting in meetings %}
                         <tr>
-                            <td>{{ meeting.name }}</td>
-                            <td>{{ meeting.date ? meeting.date|date('d-m-Y H:i') }}</td>
-                            <td>{{ meeting.limitDate ? meeting.limitDate|date('d-m-Y') : '' }}</td>
-                            <td>{{ meeting.nbUser }}/{{ meeting.usersMax }}</td>
-                            <td>{{ meeting.organizer.login }}</td>
-                            <td></td>
-                            <td>{{ meeting.state.value }}</td>
-                            <td>
+                            <td><p class="mobile-th">Nom : </p>{{ meeting.name }}</td>
+                            <td><p class="mobile-th">Date : </p>{{ meeting.date ? meeting.date|date('d-m-Y H:i') }}</td>
+                            <td><p class="mobile-th">Clôture : </p>{{ meeting.limitDate ? meeting.limitDate|date('d-m-Y') : '' }}</td>
+                            <td><p class="mobile-th">Inscriptions : </p>{{ meeting.nbUser }}/{{ meeting.usersMax }}</td>
+                            <td><p class="mobile-th">Organisation : </p><a href="{{ path('app_profile_user', {'id': meeting.organizer.id, 'sortie': meeting.id}) }}">{{ meeting.organizer.login }}</a></td>
+                            <td><p class="mobile-th">Sortie : </p>{{ meeting.state.value }}</td>
+                            <td><p class="mobile-th">Actions : </p>
                                 <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}">Afficher</a>
 
                                 {% if meeting.state.value != state_canceled and meeting.organizer == app.user %}
@@ -59,11 +61,15 @@
                                         <a href="{{ path('app_meeting_publish', {'id': meeting.id}) }}">Publier</a>
                                     {% endif %}
 
-                                    {% if isButtonModifyAndCancelDisplayed(meeting) %}
+                                    {% if isButtonModifyDisplayed(meeting) %}
                                         <a href="{{ path('app_meeting_edit', {'id': meeting.id}) }}">Modifier</a>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if meeting.state.value != state_canceled %}
+                                    {% if isButtonCancelDisplayed(meeting) %}
                                         <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}">Annuler</a>
                                     {% endif %}
-
                                 {% endif %}
 
                                 {% if isButtonsInscriptionDisplayed(meeting) %}
@@ -72,7 +78,6 @@
                                     {% else %}
                                         <a href="{{ path('app_meeting_registerToMeeting',  {'id': meeting.id}) }}"> S'inscrire <a>
                                     {% endif %}
-
                                 {% endif %}
 
                             </td>
@@ -84,9 +89,6 @@
                     {% endfor %}
                     </tbody>
                 </table>
-            </div>
-            <div class="text-center mt-4">
-                <a href="{{ path('app_meeting_new') }}" class="btn btn-custom">Créer une sortie</a>
             </div>
         </div>
     </div>

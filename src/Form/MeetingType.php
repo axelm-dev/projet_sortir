@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -54,6 +55,18 @@ class MeetingType extends AbstractType
             ->add('textNote',TextType::class,[
                 'label'=>'Description',
                 'required'=>false,
+            ])
+            ->add('save', SubmitType::class, [
+                'attr' => ['class' => 'btn btn-custom'],
+                'label' => 'Enregistrer'
+            ])
+            ->add('publish', SubmitType::class, [
+                'attr' => ['class' => 'btn btn-custom'],
+                'label' => 'Publier'
+            ])
+            ->add('add_place', SubmitType::class, [
+                'attr' => ['class' => 'btn btn-custom'],
+                'label' => '+'
             ])
         ;
     }
