@@ -254,4 +254,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
             $this->actif
             ) = unserialize($data, ['allowed_classes' => false]);
     }
+
+    public function __toString(): string
+    {
+        return $this->login;
+    }
 }
