@@ -1,0 +1,30 @@
+.meeting-row{
+    /*position: fixed;*/
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: flex-start;*/
+    /*flex-direction: row-reverse;*/
+    /*align-content: flex-start;*/
+    border-radius: 11px !important;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+
+
+.meeting-transparent{
+    background-color: transparent !important;
+
+}
+.meeting-row-value{
+    color: whitesmoke !important;
+
+}
+.meeting-row-title{
+    color: whitesmoke !important;
+
+}
+
+/*.meeting-tBody{*/
+/*    background-color: rgba(0, 0, 0, 0.3);*/
+/*    border-radius: 11px;*/
+/*}*/
