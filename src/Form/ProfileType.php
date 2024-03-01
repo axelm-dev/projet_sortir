@@ -8,6 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichFileType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ProfileType extends AbstractType
 {
@@ -17,7 +19,9 @@ class ProfileType extends AbstractType
             ->add('firstName')
             ->add('lastName')
             ->add('phone')
-            ->add('imageFile',FileType::class)
+            ->add('imageFile',VichImageType::class, [
+                          'required'     => true,
+                           'allow_delete' => true])
             ->add('modifier',SubmitType::class,[
                 'label' => 'Modifier',
                 'attr' => [

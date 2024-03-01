@@ -38,7 +38,7 @@ class ProfileController extends AbstractController
             $em->flush();
 
             $this->addFlash("success","Profil modifié");
-            return $this->redirectToRoute("app_profile");
+            return $this->redirectToRoute("app_profile_user",["id" => $user->getId()]);
         }
 
         return $this->render('profile/index.html.twig', [

@@ -38,7 +38,7 @@ class Profile
         return $this->imageFile;
     }
 
-    public function setImageFile(?File $imageFile): Profile
+    public function setImageFile(?File $imageFile): static
     {
         $this->imageFile = $imageFile;
         return $this;

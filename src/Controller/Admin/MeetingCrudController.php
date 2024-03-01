@@ -63,5 +63,4 @@ class MeetingCrudController extends AbstractCrudController
             ])->autocomplete()
             ->setColumns(12);
     }
-    */
 }
