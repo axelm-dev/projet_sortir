@@ -59,6 +59,13 @@
             .meeting-main-content-tr{
                 display: flex;
                 flex-wrap: wrap;
+                flex-direction: column;
+                justify-content: space-between;
+                align-content: flex-start;
+            }
+            .meeting-main-content-row{
+                display: flex;
+                align-items: flex-start;
             }
         }
     }
