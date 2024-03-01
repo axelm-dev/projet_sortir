@@ -11,7 +11,7 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup"> <!-- Utiliser justify-content-end pour aligner les liens à droite -->
                 <div class="navbar-nav">
-                    <a class="nav-link active" aria-current="page" href="{{ path("app_meeting_index") }}">Accueil</a>
+                    <a class="nav-link" aria-current="page" href="{{ path("app_meeting_index") }}">Accueil</a>
                     {% if app.user %}
                         <a class="nav-link" href="{{ path("app_message") }}">Messagerie</a>
                         <a class="nav-link" href="{{ url("app_logout") }}">Déconnexion</a>

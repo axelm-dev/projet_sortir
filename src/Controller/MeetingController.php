@@ -52,10 +52,6 @@ class MeetingController extends ProjectController
 
         $meetings = $this->getMeetings($meetings, $dateNow, $stateMeetingRepository, $entityManager, $user);
 
-        if($formFilter->get('create_new')->isClicked()){
-            return $this->redirectToRoute('app_meeting_new', [], Response::HTTP_SEE_OTHER);
-        }
-
         return $this->render('meeting/index.html.twig', [
             'meetings' => $meetings,
             'meetingFilterForm' => $formFilter->createView(),

@@ -60,10 +60,6 @@ class MeetingFilterType extends AbstractType
             ->add('rechercher', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-custom'],
                 'label' => 'Rechercher'
-            ])
-            ->add('create_new', SubmitType::class, [
-                'attr' => ['class' => 'btn btn-custom hide-mobile'],
-                'label' => 'Créer une nouvelle sortie'
             ]);
     }
 

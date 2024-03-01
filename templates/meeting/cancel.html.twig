@@ -27,8 +27,10 @@
     </table>
 
     {{ form_start(meetingCancelForm) }}
+        {{ form_errors(meetingCancelForm) }}
         {{ form_row(meetingCancelForm.annulation_reason) }}
-        <button type="submit" class="btn btn-custom">Enregistrer la raison</button>
+        {{ form_widget(meetingCancelForm._token) }}
+    <button type="submit" class="btn btn-custom">Enregistrer la raison</button>
         <a href="{{ path('app_meeting_show', {'id': meeting.id}) }}" class="btn btn-custom">Annuler</a>
     {{  form_end(meetingCancelForm) }}
 

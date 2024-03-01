@@ -21,7 +21,8 @@ class MeetingType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom de la sortie'
+                'label' => 'Nom de la sortie',
+                'required'=>true,
             ])
             ->add('campus',EntityType::class,[
                 'class'=>Campus::class,
@@ -44,6 +45,7 @@ class MeetingType extends AbstractType
                 'label' => 'Date',
                 'widget' => 'single_text',
                 'html5' => true,
+                'required'=>true,
                 'attr' => [
                     'min' => (new \DateTime())->format('Y-m-d h:i')
                 ]
@@ -55,6 +57,7 @@ class MeetingType extends AbstractType
                 'label' => 'Inscription jusqu\'au',
                 'widget' => 'single_text',
                 'html5' => true,
+                'required'=>true,
                 'attr' => [
                     'min' => (new \DateTime())->format('Y-m-d'),
                     'max' => ('date')

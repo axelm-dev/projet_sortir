@@ -78,8 +78,9 @@ class AuthorizationService implements PermAndStateAppInterface
     private function canCancelMeeting($meeting): bool
     {
         $user = $this->security->getUser();
-        if($user && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            if(($meeting->getOrganizer()->getId() === $user->getId()) || $this->authorizationChecker->isGranted('ROLE_ADMIN')) {
+        if($user) {
+            if((($meeting->getOrganizer()->getId() === $user->getId()) || $this->authorizationChecker->isGranted('ROLE_ADMIN'))
+                && $meeting->getState()->getValue() === self::STATE_MEETING_OPENED) {
                 return $this->dateNow < $meeting->getLimitDate();
             } else {
                 return false;

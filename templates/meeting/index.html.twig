@@ -9,11 +9,13 @@
             <button class="btn btn-custom" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-filter" aria-expanded="false" aria-controls="collapse-filter">
                 Rechercher une sortie
             </button>
+            <a class="hide-mobile btn btn-custom" href="{{ path('app_meeting_new') }}">
+                Créer une sortie
+            </a>
         </div>
         <div class="collapse filter col-md-4" id="collapse-filter">
             {{ form_start(meetingFilterForm) }}
             <div class="row">
-                {{ form_row(meetingFilterForm.create_new) }}
                 {{ form_row(meetingFilterForm.campus) }}
                 {{ form_row(meetingFilterForm.search) }}
                 {{ form_row(meetingFilterForm.start_date) }}
@@ -66,7 +68,7 @@
                                     {% endif %}
                                 {% endif %}
 
-                                {% if meeting.state.value != state_canceled %}
+                                {% if meeting.state.value == state_opened and (meeting.organizer == app.user or "ROLE_ADMIN" in app.user.roles) %}
                                     {% if isButtonCancelDisplayed(meeting) %}
                                         <a href="{{ path('app_meeting_cancel', {'id': meeting.id}) }}">Annuler</a>
                                     {% endif %}

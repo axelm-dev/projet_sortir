@@ -34,7 +34,7 @@
                 </tr>
                 <tr class="meeting-main-content-tr">
                     <th class="meeting-main-content-row meeting-th">Date</th>
-                    <td class="meeting-main-content-row meeting-td">{{ meeting.date ? meeting.date|date('Y-m-d H:i') : '' }}</td>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.date ? meeting.date|date('d-m-Y H:i') : '' }}</td>
                 </tr>
                 <tr class="meeting-main-content-tr">
                     <th class="meeting-main-content-row meeting-th">Nombre de participants maximum</th>
@@ -54,7 +54,7 @@
                 </tr>
                 <tr class="meeting-main-content-tr">
                     <th class="meeting-main-content-row meeting-th">Date limite d'inscription</th>
-                    <td class="meeting-main-content-row meeting-td">{{ meeting.limitDate ? meeting.limitDate|date('Y-m-d') : '' }}</td>
+                    <td class="meeting-main-content-row meeting-td">{{ meeting.limitDate ? meeting.limitDate|date('d-m-Y') : '' }}</td>
                 </tr>
                 {% if meeting.annulationReason != null %}
                     <tr class="meeting-main-content-tr">
@@ -92,7 +92,7 @@
 
 <div class="text-center">
     <button class="btn btn-custom meeting-btn" type="button" data-bs-toggle="collapse" data-bs-target="#participantsTable" aria-expanded="false" aria-controls="participantsTable">
-        Afficher les paritcipants
+        Afficher les participants
     </button>
 
         <a href="{{ path('app_meeting_index') }}" class="btn btn-custom meeting-btn">Retour à la liste</a>

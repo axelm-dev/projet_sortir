@@ -4,12 +4,13 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="title col-md-8 text-center mb-5">
-                <h1>VOTRE PROFIL</h1>
+                <h1>PROFIL</h1>
             </div>
         </div>
         <div class="d-flex justify-content-center">
             <div class="custom-card col-md-6 mb-5 d-flex flex-row">
                 <div class="card-body">
+                    <p class="card-text">Login : {{ user.login }}</p>
                     <p class="card-text">Prénom : {{ user.profile.firstName }}</p>
                     <p class="card-text">Nom : {{ user.profile.lastName }}</p>
                     <p class="card-text">Email : {{ user.email }}</p>
@@ -19,12 +20,14 @@
         </div>
         <div class="d-flex justify-content-center mb-3">
             <div class="row">
-                <div class="col-4">
-                    <a class="btn btn-custom" href="{{ path('app_profile', {'id': user.id}) }}">Modifier</a>
-                </div>
+                {% if user == app.user %}
+                    <div class="col-4">
+                        <a class="btn btn-custom" href="{{ path('app_profile', {'id': user.id}) }}">Modifier</a>
+                    </div>
+                {% endif %}
                 {% if meetingId %}
                     <div class="col-8">
-                        <a class="btn btn-custom" href="{{ path('app_meeting_show', {'id': meetingId}) }}">Retour à la sortie</a>
+                        <a class="btn btn-custom" href="{{ path('app_meeting_show', {'id': meetingId}) }}">Retour</a>
                     </div>
                 {% endif %}
             </div>
