@@ -7,46 +7,46 @@
         </div>
         <form>
                 <div class="d-flex justify-content-center mb-3">
-                        <div class="custom-card col-md-8 mb-3">
+                        <div class="custom-card col-md-6 mb-3">
 
-                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
-                                        {{ form_label(meetingForm.name) }}
+                                <div class="form-group d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.name, null, {'label_attr': {'class': 'label-space'}}) }}
                                         {{ form_widget(meetingForm.name, {'attr': {'class': 'form-control input-space'}}) }}
                                 </div>
 
-                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
-                                        {{ form_label(meetingForm.campus) }}
+                                <div class="form-group d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.campus, null, {'label_attr': {'class': 'label-space'}}) }}
                                         {{ form_widget(meetingForm.campus, {'attr': {'class': 'form-control input-space'}}) }}
                                 </div>
 
-                                <div class="label-space d-flex justify-content-between align-items-center mb-3">
-                                                {{ form_label(meetingForm.place) }}
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                {{ form_label(meetingForm.place, null, {'label_attr': {'class': 'label-space'}}) }}
                                                 {{ form_widget(meetingForm.place, {'attr': {'class': 'form-control input-space'}}) }}
                                                 {{ form_widget(meetingForm.add_place) }}
                                 </div>
 
-                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
-                                        {{ form_label(meetingForm.duration) }}
+                                <div class="form-group d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.duration, null, {'label_attr': {'class': 'label-space'}}) }}
                                         {{ form_widget(meetingForm.duration, {'attr': {'class': 'form-control input-space'}}) }}
                                 </div>
 
-                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
-                                        {{ form_label(meetingForm.date) }}
+                                <div class="form-group d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.date, null, {'label_attr': {'class': 'label-space'}}) }}
                                         {{ form_widget(meetingForm.date, {'attr': {'class': 'form-control input-space'}}) }}
                                 </div>
 
-                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
-                                        {{ form_label(meetingForm.usersMax) }}
+                                <div class="form-group d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.usersMax, null, {'label_attr': {'class': 'label-space'}}) }}
                                         {{ form_widget(meetingForm.usersMax, {'attr': {'class': 'form-control input-space'}}) }}
                                 </div>
 
-                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
-                                        {{ form_label(meetingForm.limitDate) }}
+                                <div class="form-group d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.limitDate, null, {'label_attr': {'class': 'label-space'}}) }}
                                         {{ form_widget(meetingForm.limitDate, {'attr': {'class': 'form-control input-space'}}) }}
                                 </div>
 
-                                <div class="form-group label-space d-flex justify-content-between align-items-center mb-3">
-                                        {{ form_label(meetingForm.textNote) }}
+                                <div class="form-group d-flex justify-content-between align-items-center mb-3">
+                                        {{ form_label(meetingForm.textNote, null, {'label_attr': {'class': 'label-space'}}) }}
                                         {{ form_widget(meetingForm.textNote, {'attr': {'class': 'form-control input-space'}}) }}
                                 </div>
                         </div>

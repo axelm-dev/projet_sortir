@@ -188,19 +188,15 @@ a:hover {
 }
 
 .btn-add {
-    margin: 0;
+    margin: 0 0 0 10px;
     background-color: rgb(2, 34, 122, 0.3); /* Couleur de fond */
     color: white; /* Couleur du texte */
     font-size: 16px; /* Taille de la police */
     cursor: pointer; /* Curseur pointer */
-    height: 40px;
-    width: 40px;
-    border-radius: 20px; /* Bordure arrondie */
+    height: 38px;
+    width: 38px;
+    border-radius: 19px; /* Bordure arrondie */
     box-shadow: 4px 2px 11px rgba(0, 0, 0, 0.6);
-}
-
-.space-reducer {
-    margin-left: 11px; /* Ajustez cette valeur selon vos besoins */
 }
 
 .mobile-th {
@@ -209,12 +205,13 @@ a:hover {
 
 /* Ajoute de l'espace à droite du label */
 .label-space {
-    margin-right: 10px; /* Ajustez cette valeur selon l'espace désiré */
+    padding-right: 20px !important; /* Ajustez cette valeur selon l'espace désiré */
+    width: 35% !important;
 }
 
 /* Ou, ajoute de l'espace à gauche du champ */
 .input-space {
-    margin-left: 120px; /* Ajustez cette valeur selon l'espace désiré */
+    margin-left: 30px; /* Ajustez cette valeur selon l'espace désiré */
 }
 
 /* Responsive styles */
