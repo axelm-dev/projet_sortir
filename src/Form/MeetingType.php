@@ -36,9 +36,6 @@ class MeetingType extends AbstractType
                 'label' => 'Lieu',
                 'placeholder'=>'Choisir un lieu',
                 'required'=>true,
-                'attr' => [
-                    'class' => 'space-reducer'
-                ]
             ])
             ->add('duration', IntegerType::class, [
                 'label' => 'Durée en minutes',
